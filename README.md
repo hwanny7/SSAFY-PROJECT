@@ -69,7 +69,7 @@ movie 월드컵 ()
 
 
 
-1. user => { username, password, profile_img, rating, point } + N 또는 M : Movie 좋아요, 월드컵 기반 좋아요, 게시판 글
+1. user => { username, password, profile 설명, profile_img, rating, point } + N 또는 M : Movie 좋아요, 월드컵 기반 좋아요, 게시판 글
    
    (rating, point 둘 중 하나 필요? )
 
