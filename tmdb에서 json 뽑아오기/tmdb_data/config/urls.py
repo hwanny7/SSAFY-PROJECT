@@ -1,4 +1,4 @@
-"""finalpjt URL Configuration
+"""config URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/3.2/topics/http/urls/
@@ -19,6 +19,4 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('movies/', include('movies.urls')),
-    path('accounts/', include('dj_rest_auth.urls')),
-    path('accounts/signup', include('dj_rest_auth.registration.urls'))
 ]
