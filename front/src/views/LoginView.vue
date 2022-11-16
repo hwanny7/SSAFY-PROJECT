@@ -12,8 +12,8 @@
         </div>
         <input type="submit" value="로그인">
     </form>
-
-    <img src="@/assets/kakao_start.png" @click="kakaoLogin"> <!-- 카카오 로그인-->
+    <router-link :to="{name : 'SignUpView'}">회원가입</router-link>
+    <!-- <img src="@/assets/kakao_start.png" @click="kakaoLogin"> 카카오 로그인 -->
   </div>
 </template>
 
