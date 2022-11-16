@@ -1,78 +1,105 @@
 import axios from 'axios'
+import router from '@/router'
+
+const API_URL = 'http://127.0.0.1:8000'
 
 const login = {
   namespaced: true,
   state: {
     token: null,
-    username: null,
-    imgUrl: null,
+    user: null,
   },
   getters: {
-    username(state) { return state.username}
+    user: (state) => state.user,
+    authHead: (state) => ({Authorization: `Token ${state.token}`}),
+    isLogin: (state) => state.token ? true : false,
   },
   mutations: {
-    SAVE_TOKEN(state, token) {
-      state.token = token
-    },
-    KAKAO_SAVE(state, payload) {
-      state.username = payload.username
-      state.imgUrl = payload.imgUrl
-    }
+    SAVE_TOKEN: (state, token) => state.token = token,
+    SET_USER: (state, user) => state.user = user
   },
   actions: {
-    login({commit}, payload) {
-      console.log(payload)
+    login({commit, dispatch}, payload) {
       axios({
-        url: 'http://127.0.0.1:8000/accounts/login/',
+        url: `${API_URL}/accounts/login/`,
         method: 'post',
         data: payload
       })
         .then(res => {
           const token = res.data.key
           commit('SAVE_TOKEN', token)
+          dispatch('getUserInfo')
           alert('로그인 성공!')
-          // router 등록하기
+          router.push('/') // app 창으로 이동
         })
         .catch(err => {
           alert('잘못 입력하셨습니다.', err) // json stringfy로 에러 출력하기
         })
     },
-    kakaoLogin({commit}) {
-      window.Kakao.init('39caf5e8e7fed0bce24af6168049aae6')
-      window.Kakao.Auth.login({
-        scope: 'account_email, profile_image',
-        success: (res) => {
-          console.log(res)
-          window.Kakao.API.request({
-            url: '/v2/user/me',
-            success: (res) => {
-              console.log(res, 'hi')
-              const username = res.kakao_account.email
-              const imgUrl = res.kakao_account.profile.profile_image_url
-              commit('KAKAO_SAVE', {username, imgUrl})
-              // this.$router.push({name : 'SignUpView'})
-            },
-            fail: (err) => {
-              console.log(err)
-            }
-          })
-        }
-      })
-    },
-    signUp(context, password) { //400 은 이미 가입한 아이디
+    getUserInfo({commit, getters}) {
       axios({
-        url: 'http://127.0.0.1:8000/accounts/signup',
-        method: 'post',
-        data: {
-          username: context.state.username, // 또는 매개변수로 전달받아서 사용
-          password1: password.password1,
-          password2: password.password2,
-        }
+        url: `${API_URL}/accounts/user/`,
+        method: 'get',
+        headers: getters.authHead,
       })
         .then(res => {
-          context.commit('SAVE_TOKEN', res.data.key)
+          console.log(res)
+          commit('SET_USER', res.data)
         })
-    }
+        //https://stackoverflow.com/questions/70198922/user-profile-update-using-dj-rest-auth-allauth > userinfo custom
+    },   
+    signUp({commit, dispatch}, payload) { //400 은 이미 가입한 아이디
+      console.log(payload)
+      axios({
+        url: `${API_URL}/accounts/signup`,
+        method: 'post',
+        data: payload
+      })
+        .then(res => {
+          commit('SAVE_TOKEN', res.data.key)
+          dispatch('getUserInfo')
+          alert('가입 성공!')
+          router.push('/') // app 창으로 이동
+        })
+    },
+    logout( {commit, getters} ) { // contect 안에 commit과 getters이 포함되어 있으니까 중괄호로 같이 묶어야함
+      axios({
+        url: `${API_URL}/accounts/logout/`,
+        method: 'post',
+        headers: getters.authHead
+      })
+        .then(res => {
+          console.log(res)
+          commit('SAVE_TOKEN', null)
+          commit('SET_USER', null) //유저와 token 초기화
+          router.push('/')
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    // kakaoLogin({commit}) {
+    //   window.Kakao.init('39caf5e8e7fed0bce24af6168049aae6')
+    //   window.Kakao.Auth.login({
+    //     scope: 'account_email, profile_image',
+    //     success: (res) => {
+    //       console.log(res)
+    //       window.Kakao.API.request({
+    //         url: '/v2/user/me',
+    //         success: (res) => {
+    //           console.log(res, 'hi')
+    //           const username = res.kakao_account.email
+    //           const imgUrl = res.kakao_account.profile.profile_image_url
+    //           commit('KAKAO_SAVE', {username, imgUrl})
+    //           // this.$router.push({name : 'SignUpView'})
+    //         },
+    //         fail: (err) => {
+    //           console.log(err)
+    //         }
+    //       })
+    //     }
+    //   })
+    // },
   }
 }
 

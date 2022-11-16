@@ -1,11 +1,35 @@
 <template>
   <div id="app">
     <nav>
-      <router-link :to="{name : 'LoginView'}">Login</router-link>
+      <div v-if="!isLogin">
+        <router-link :to="{name : 'LoginView'}">Login</router-link>
+      </div>
+      <div v-else>
+        <router-link :to="{name : 'ProfileView', params: { id: user?.pk } }">Profile</router-link> |
+        <button @click="logout">로그아웃</button>
+      </div>
     </nav>
     <router-view/>
   </div>
 </template>
+
+<script>
+import { mapGetters, mapActions } from 'vuex'
+
+export default {
+    computed: {
+      ...mapGetters('login', [
+        'user', 'isLogin'
+      ])
+    },
+    methods: {
+      ...mapActions('login', [
+        'logout'
+      ])
+    }
+}
+</script>
+
 
 <style>
 #app {

@@ -6,7 +6,7 @@ class User(AbstractUser):
     nickname = models.CharField(max_length=100)
     followings = models.ManyToManyField('self',symmetrical=False, related_name='followers')
     blockings = models.ManyToManyField('self',symmetrical=False)
-    img_url = models.CharField(max_length=100)
+    img_url = models.CharField(max_length=10000)
     point = models.IntegerField(default= 0)
     date_joined = models.DateTimeField(auto_now_add=True)
 

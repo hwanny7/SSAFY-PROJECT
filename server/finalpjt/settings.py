@@ -171,5 +171,10 @@ REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
 } # 회원가입 serializer 수정
 
+
+REST_AUTH_SERIALIZERS = {
+    "USER_DETAILS_SERIALIZER": "accounts.serializers.CustomUserDetailsSerializer"
+}
+
 ACCOUNT_ADAPTER = 'accounts.adapters.UserAdapter'
 # 회원가입 adapter 추가
