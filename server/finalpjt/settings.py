@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'django_extensions',
+    'imagekit',
     # CORS policy
     'corsheaders',
 
@@ -178,3 +179,10 @@ REST_AUTH_SERIALIZERS = {
 
 ACCOUNT_ADAPTER = 'accounts.adapters.UserAdapter'
 # 회원가입 adapter 추가
+
+MEDIA_ROOT = BASE_DIR / 'media'
+# 미디어 파일 저장할 공간 설정 (절대경로)
+
+MEDIA_URL = '/media/'
+# # 미디어 파일의 url 주소 설정
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
