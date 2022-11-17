@@ -48,19 +48,21 @@ const login = {
         })
         //https://stackoverflow.com/questions/70198922/user-profile-update-using-dj-rest-auth-allauth > userinfo custom
     },   
-    signUp({commit, dispatch}, payload) { //400 은 이미 가입한 아이디
-      console.log(payload)
-      axios({
-        url: `${API_URL}/accounts/signup`,
-        method: 'post',
-        data: payload
-      })
-        .then(res => {
-          commit('SAVE_TOKEN', res.data.key)
-          dispatch('getUserInfo')
-          alert('가입 성공!')
-          router.push('/') // app 창으로 이동
+    signUpAction({commit, dispatch}, formData) { //400 은 이미 가입한 아이디
+        axios({
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+          url: `${API_URL}/accounts/signup`,
+          method: 'post',
+          data: formData
         })
+          .then(res => {
+            commit('SAVE_TOKEN', res.data.key)
+            dispatch('getUserInfo')
+            alert('가입 성공!')
+            router.push('/') // app 창으로 이동
+          })
     },
     logout( {commit, getters} ) { // contect 안에 commit과 getters이 포함되어 있으니까 중괄호로 같이 묶어야함
       axios({
