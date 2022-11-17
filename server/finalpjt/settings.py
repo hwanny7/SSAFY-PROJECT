@@ -34,9 +34,12 @@ INSTALLED_APPS = [
     # Django Apps
     'accounts',
     'movies',
+    'collects',
+    'worldcups',
 
     # Third party Apps
     'rest_framework',
+
 
     # CORS policy
     'corsheaders',
@@ -169,3 +172,13 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
+
+MEDIA_ROOT = BASE_DIR / 'media'
+
+MEDIA_URL = '/media/'
+
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+}
+
+ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'

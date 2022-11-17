@@ -4,12 +4,30 @@ from django.conf import settings
 # Create your models here.
 class Genre(models.Model):
     name = models.CharField(max_length=50)
+    users = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Genre_count')
+
+class Genre_count(models.Model):
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    cnt = models.IntegerField(default = 0)
 
 class Actor(models.Model):
     name = models.CharField(max_length=50)
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Actor_count')
+
+class Actor_count(models.Model):
+    actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    cnt = models.IntegerField(default = 0)
 
 class Director(models.Model):
     name = models.CharField(max_length=50)
+    user = models.ManyToManyField(settings.AUTH_USER_MODEL, through='Director_count')
+
+class Director_count(models.Model):
+    director = models.ForeignKey(Director, on_delete=models.CASCADE)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    cnt = models.IntegerField(default = 0)
 
 class Movie(models.Model):
     title = models.CharField(max_length=100)
@@ -25,24 +43,3 @@ class Movie(models.Model):
     actors = models.ManyToManyField(Actor)
     directors = models.ManyToManyField(Director)
 
-class Worldcup(models.Model):
-    movies = models.ForeignKey(Movie,on_delete=models.CASCADE)
-    one_game = models.IntegerField(default=0)
-    win = models.IntegerField(default=0)
-    game = models.IntegerField(default=0)
-    victory = models.IntegerField(default=0)
-
-class Collection(models.Model):
-    title = models.CharField(max_length=50)
-    content = models.TextField()
-    movies = models.ManyToManyField(Movie)
-    users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    open_public = models.BooleanField(default=False)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_collection')
-
-class Review(models.Model):
-    users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    collection = models.ForeignKey(Collection, on_delete=models.CASCADE)
-    content = models.TextField()
-    

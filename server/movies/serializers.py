@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Movie, Actor, Director, Genre
+from .models import Movie
 
 
 
@@ -7,5 +7,4 @@ class MovieListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster_path',)
-        # read_only_fields = ('')
+        fields = ('title', 'poster_path','id')
