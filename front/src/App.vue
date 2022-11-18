@@ -5,6 +5,7 @@
         <router-link :to="{name : 'LoginView'}">Login</router-link>
       </div>
       <div v-else>
+        <!-- <router-link :to="{name : 'CollectionView', params: { id: user?.pk } }">Collection</router-link> | -->
         <router-link :to="{name : 'ProfileView', params: { id: user?.pk } }">Profile</router-link> |
         <button @click="logout">로그아웃</button>
       </div>

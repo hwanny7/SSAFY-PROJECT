@@ -22,5 +22,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('accounts/', include('dj_rest_auth.urls')),
     path('user/', include('accounts.urls')),
-    path('accounts/signup', include('dj_rest_auth.registration.urls')),
+    path('accounts/signup/', include('dj_rest_auth.registration.urls')),
+    path('collects/', include('collects.urls')),
+    path('movies/', include('movies.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -9,7 +9,7 @@ class CustomRegisterSerializer(RegisterSerializer):
     followings = serializers.ModelSerializer(many=True, read_only=True)
     blockings = serializers.ModelSerializer(many=True, read_only=True)
     # image = serializers.ImageField(read_only=True)
-    image = serializers.ImageField(use_url=True)
+    image = serializers.ImageField(use_url=True) # blank True 설정 넣기
     # image = serializers.SerializerMethodField()
     point = serializers.IntegerField(read_only=True) 
     date_joined = serializers.DateTimeField(read_only=True)

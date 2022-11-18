@@ -3,6 +3,8 @@ import VueRouter from 'vue-router'
 import LoginView from '@/views/LoginView'
 import SignUpView from '@/views/SignUpView'
 import ProfileView from '@/views/ProfileView'
+import CollectionCreate from '@/views/Collection/CollectionCreate'
+
 
 
 
@@ -23,6 +25,11 @@ const routes = [
     path: '/:id',
     name: 'ProfileView',
     component: ProfileView
+  },
+  {
+    path: '/CollectionCreate',
+    name: 'CollectionCreate',
+    component: CollectionCreate
   },
 ]
 
