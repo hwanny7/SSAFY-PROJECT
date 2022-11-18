@@ -2,7 +2,7 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import MovieListSerializer
-from .models import Movie, Genre, Actor , Genre_count
+from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count
 from django.contrib.auth import get_user_model
 
 from pprint import pprint
@@ -23,53 +23,72 @@ def select(request):
 
 @api_view(['GET', 'POST'])
 def like_movie(request):
+    User = get_user_model()
+    person = get_object_or_404(User, pk=3)
+
     # 좋아요 목록 보여주기
     if request.method == 'GET':
-        movies = get_list_or_404(Movie)
-        serializer = MovieListSerializer(movies, many=True)
-        return Response(serializer.data)
+        movies = person.movie_set.all()
+        if movies:
+            serializer = MovieListSerializer(movies, many=True)
+            return Response(serializer.data)
+        else:
+            return JsonResponse({'data':'없습니다.'})
 
-        '''
-        1. 좋아요를 누른 영화를 가지고 온다.
-        '''
-    # 좋아요를 생성한다.
+    # 좋아요 추가 삭제.
     elif request.method == 'POST':
-        User = get_user_model()
         select = request.data
-        person = get_object_or_404(User, pk=int(select['user']))
         movie = get_object_or_404(Movie, pk=int(select['movie']))
         genres = movie.genres.all()
+        actors = movie.actors.all()
+        directors = movie.directors.all()
 
-        for genre in genres:
-            if person.genre_count_set.filter(genre_id=genre.id, user_id=person.id).exists():
+        # 영화를 좋아하는 사람 중에 유저가 있으면 -> 좋아요 취소
+        if movie.like_users.filter(pk=person.pk).exists():
+            movie.like_users.remove(person)
+            for genre in genres:
                 gen = Genre_count.objects.get(genre_id=genre.id, user_id=person.id)
-                gen.cnt = gen.cnt + 1
+                gen.cnt -=  1
                 gen.save()
+
+            
+            for actor in actors:
+                act = Actor_count.objects.get(actor_id=actor.id, user_id=person.id)
+                act.cnt -= 1
+                act.save()
                 
-            else:
-                print('여기?')
-                person.genre_set.add(genre, through_defaults={'cnt':1})
+            for director in directors:
+                dir = Director_count.objects.get(director_id=director.id, user_id=person.id)
+                dir.cnt -= 1
+                dir.save()
 
-        pass
-        '''
-        1. 새로 선택한 좋아요 누른 영화에서 장르, 배우, 감독을 가지고 온다.
-        2. 데이터를 저장한다.
-        '''
-    elif request.method == 'PUT':
-        pass
-        '''
-        1. 기존 좋아하는 데이터를 가지고 온다.
-        2. 새로 선택한 좋아요 누른 영화에서 장르, 배우, 감독을 가지고 온다.
-        3. 기존 데이터와 새로운 데이터를 결합한다.
-        4. 데이터를 저장한다.
-        '''
-    elif request.method == 'DELETE':
-        pass
-        '''
-        1. 없애려는 영화 정보를 가지고 온다.
-        2. 그 영화의 데이터만큼 좋아하는 수치를 감소시킨다.
-        '''
+        # 영화를 좋아하는 사람 중에 유저가 없으면 -> 좋아요
+        else:
+            movie.like_users.add(person)
+            for genre in genres:
+                if person.genre_count_set.filter(genre_id=genre.id, user_id=person.id).exists():
+                    gen = Genre_count.objects.get(genre_id=genre.id, user_id=person.id)
+                    gen.cnt = gen.cnt + 1
+                    gen.save()
+                    
+                else:
+                    person.genre_set.add(genre, through_defaults={'cnt':1})
+            
+            for actor in actors:
+                if person.actor_set.filter(pk=actor.pk).exists():
+                    act = Actor_count.objects.get(actor_id=actor.id, user_id=person.id)
+                    act.cnt += 1
+                    act.save()
+                else:
+                    person.actor_set.add(actor, through_defaults={'cnt':1})
 
+            for director in directors:
+                if person.director_set.filter(pk=director.pk).exists():
+                    dir = Director_count.objects.get(director_id=director.id, user_id=person.id)
+                    dir.cnt += 1
+                    dir.save()
+                else:
+                    person.director_set.add(director, through_defaults={'cnt':1})
 
 
 
