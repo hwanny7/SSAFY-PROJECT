@@ -33,7 +33,7 @@ def like_movie(request):
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else:
-            return JsonResponse({'data':'없습니다.'})
+            return Response({'data':'없습니다.'})
 
     # 좋아요 추가 삭제.
     elif request.method == 'POST':
@@ -90,89 +90,14 @@ def like_movie(request):
                 else:
                     person.director_set.add(director, through_defaults={'cnt':1})
 
+        if person.movie_set.all():
+            serializer = MovieListSerializer(person.movie_set.all(), many=True)
+            return Response(serializer.data)
+        else:
+            return Response({'data':'없습니다.'})
+                
 
 
 
 
-# @api_view(['GET','PUT'])
-# def worldcup(request, num):
-#     if request.method == 'GET':
-#         movies = get_list_or_404(Movie)
-#         movie_lst = random.sample(movies, num)
-#         serializer = MovieListSerializer(movie_lst, many=True)
-#         return Response(serializer.data)
-
-#     elif request.method == 'PUT':
-#         winners = request.data.winners
-#         losers = request.data.losers
-#         for loser in losers:
-#             worldcup = winner.worldcup_set.all()
-#             worldcup.one_game += 1
-#             worldcup.game += 1
-
-#         for winner in winners:
-#             worldcup = winner.worldcup_set.all()
-#             worldcup.one_game += 1
-#             worldcup.win += 1
-
-#         if len(winners) == 1:
-#             worldcup = winners[0].worldcup_set.all()
-#             worldcup.victory += 1
-#             worldcup.game += 1
-#             # 여기다 유저에게 추천하는 알고리즘 함수 실행
-#             # return 최종결과
-#         else:
-#             serializer = MovieListSerializer(winners, many=True)
-#             return (serializer.data)
-                        
-# def top_rating_person_movie(request):
-#     User = get_user_model
-#     user = User.objects.all().order_by('-point')
-# @api_view(['POST','PUT'])
-# def make_collection(request):
-#     # post는 collection 형태만 만들 때 필요
-#     inform = request.data
-#     if request.method == 'POST':
-#         # print('확인', inform)
-#         # print('출력', type(inform['open_public']))
-#         # print('bool 확인용', bool(1))
-#         # print('오류 원인', bool(int(inform['open_public'])))
-#         User = get_user_model()
-#         user = User.objects.get(pk=int(inform['user']))
-#         print(user)
-#         collection = Collection.objects.create(
-#             user=user,
-#             title=inform['title'], 
-#             open_public = bool(int(inform['open_public'])),
-#             content = inform['content'],
-#             )
-#         return
-
-#     # PUT은 collection에 영화 추가할 때
-#     if request.method == 'PUT':
-#         collection = Collection.objects.get(pk=int(inform['collection']))
-#         movie = Movie.objects.get(pk=int(inform['movie']))
-#         collection.movies.add(movie, through_defaults={ 'content': inform['content'] })
-#         return JsonResponse(collection, safe=False)
-
-# def review(request):
-#     pass
-
-
-# def test(request):
-#     collection = Collection.objects.get(pk=1)
-#     choices = collection.movie_choice_set.all()
-
-#     collection_json = []
-#     for choice in choices:
-#         a = {
-#             'title': collection.title,
-#             'content': collection.content,
-#             'movie' : choice.movie_id,
-#             'movies content': choice.content,
-#         }
-        
-#         collection_json.append(a)
-#     print(collection_json)
-#     return JsonResponse(collection_json, safe=False)
 
