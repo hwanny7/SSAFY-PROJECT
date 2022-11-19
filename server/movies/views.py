@@ -95,9 +95,4 @@ def like_movie(request):
             return Response(serializer.data)
         else:
             return Response({'data':'없습니다.'})
-                
-
-
-
-
 

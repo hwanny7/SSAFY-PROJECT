@@ -16,9 +16,7 @@ def tmdb_genres():
         }
     ).json()    
     for genre in response.get('genres'):
-        print(genre, '가나다라')
         if Genre.objects.filter(pk=genre['id']).exists(): continue        
-        print(genre, 'abcdef')
         Genre.objects.create(
             id=genre['id'],
             name=genre['name']

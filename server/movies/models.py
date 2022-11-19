@@ -46,3 +46,12 @@ class Movie(models.Model):
     win = models.IntegerField(default=0)
     game = models.IntegerField(default=0)
     victory = models.IntegerField(default=0)
+
+class UpcomingMovie(models.Model):
+    updated_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100)
+    overview = models.TextField()
+    release_date = models.DateTimeField()
+    poster_path = models.CharField(max_length=200)
+    genres = models.ManyToManyField(Genre)
+    youtube_key = models.CharField(max_length=100)
