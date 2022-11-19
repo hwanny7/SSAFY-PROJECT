@@ -55,3 +55,27 @@ class UpcomingMovie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     youtube_key = models.CharField(max_length=100)
+
+class RecommendedMovie(models.Model):
+    title = models.CharField(max_length=100)
+    release_date = models.DateField()
+    popularity = models.FloatField()
+    vote_count = models.IntegerField()
+    vote_average = models.FloatField()
+    overview = models.TextField()
+    poster_path = models.CharField(max_length=200)
+    youtube_key = models.CharField(max_length=100)
+    genres = models.ManyToManyField(Genre)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director)
+    movies = models.ForeignKey(Movie, on_delete=models.CASCADE)
+
+class MovieReview(models.model):
+    movies = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    content = models.TextField()
+    vote = models.IntegerField()
+    block_users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    banned = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DatetimeField(auto_now=True)

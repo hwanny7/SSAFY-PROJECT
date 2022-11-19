@@ -6,6 +6,8 @@ urlpatterns = [
     path('select/', views.select, name='select'),
     path('like/', views.like_movie ,name='like_movie'),
     path('upcoming/', views_tmdb.get_upcoming_movie),
+    path('movieinform/', views.MovieInform),
+    path('<int:movie_id>/review_create/', views.review_create)
     # path('collection/', views.make_collection, name='collection'),
     # path('review/', views.review, name='review'),
     # path('worldcup/<int:num>/', views.worldcup, name='worldcup'),

@@ -30,7 +30,6 @@ def movie_data(page=1):
         }
     ).json()
 
-
     for movie_dict in response.get('results'):
         if not movie_dict.get('release_date'): continue   # 없는 필드 skip
         if not movie_dict.get('poster_path'): continue
@@ -59,11 +58,11 @@ def movie_data(page=1):
 
 def get_upcoming_movie(request):
     if UpcomingMovie.objects.all().exists():
-        if UpcomingMovie.objects.get(pk=)
+        # if UpcomingMovie.objects.get(pk=)
         UpcomingMovie.objects.all().delete()
-        HttpResponse('가나다 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
         get_upcoming_movie(request)
     else:
         for i in range(1, 20):
             movie_data(i)
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
+

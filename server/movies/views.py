@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import MovieListSerializer
-from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count
+from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer
+from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview
 from django.contrib.auth import get_user_model
 
 from pprint import pprint
@@ -20,6 +20,7 @@ def select(request):
         movies = get_list_or_404(Movie)
         serializer = MovieListSerializer(movies, many=True)
         return Response(serializer.data)
+
 
 @api_view(['GET', 'POST'])
 def like_movie(request):
@@ -96,3 +97,31 @@ def like_movie(request):
         else:
             return Response({'data':'없습니다.'})
 
+@api_view(['GET'])
+def MovieInform(request):
+    if request.method == 'GET':
+        movie = get_object_or_404(Movie, pk=request.movie_pk)
+        serializer = MovieSerializer(movie)
+        return Response(serializer.data)
+
+@api_view(['POST'])
+def review_create(request, movie_id):
+    movie = get_object_or_404(Movie, pk=movie_id)
+    if request.method == 'POST':
+        serializer = ReviewSerializer(data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save(moive=movie)
+            return Response(serializer.data)
+    
+@api_view(['PUT', 'DELETE'])
+def review_datail(request, comment_pk):
+    review = get_object_or_404(MovieReview, pk=comment_pk)
+    if request.method == 'PUT':
+        serializer = ReviewSerializer(review, data=request.data)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data)
+
+    if request.method == 'DELETE':
+        review.delete()
+        return Response({'data':'삭제 완료'})
