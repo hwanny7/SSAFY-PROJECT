@@ -35,6 +35,8 @@ INSTALLED_APPS = [
     'accounts',
     'rest_framework',
     'django_extensions',
+    'collects',
+    'movies',
     'imagekit',
     # CORS policy
     'corsheaders',

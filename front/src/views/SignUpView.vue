@@ -11,7 +11,7 @@
         <label for="nickname">별명: </label>
         <input type="text" v-model.trim ="nickname"> <br>
         <label for="img">프로필 URL: </label>
-        <input type="file" accept=".jpg, .jpeg, .png" v-on:change="imgFile" /> <br>
+        <input type="file" accept="image/gif, image/jpeg, image/png" v-on:change="imgFile" /> <br>
         <input type="submit" value ="가입하기">
     </form>
   </div>

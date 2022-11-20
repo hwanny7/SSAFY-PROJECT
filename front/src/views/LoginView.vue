@@ -32,10 +32,11 @@ export default {
       ...mapActions('login', [
         'login', 'kakaoLogin' 
       ])
-    }
+    },
 }
 </script>
 
 <style>
 
 </style>
+

@@ -3,6 +3,10 @@ import VueRouter from 'vue-router'
 import LoginView from '@/views/LoginView'
 import SignUpView from '@/views/SignUpView'
 import ProfileView from '@/views/ProfileView'
+import CollectionCreate from '@/views/Collection/CollectionCreate'
+import AllCollection from '@/views/Collection/AllCollection'
+
+
 
 
 
@@ -20,6 +24,16 @@ const routes = [
     component: SignUpView
   },
   {
+    path: '/collectioncreate',
+    name: 'CollectionCreate',
+    component: CollectionCreate
+  },
+  {
+    path: '/allcollection',
+    name: 'AllCollection',
+    component: AllCollection,
+  },
+  { //주소 바인딩한 값은 무조건 마지막에 두는 게 좋음. :id는 string이기 때문에 주소가 바뀔 때 모든 주소가 id값과 같다고 판단한다.
     path: '/:id',
     name: 'ProfileView',
     component: ProfileView

@@ -8,15 +8,18 @@ const login = {
   state: {
     token: null,
     user: null,
+    profile: null,
   },
   getters: {
     user: (state) => state.user,
     authHead: (state) => ({Authorization: `Token ${state.token}`}),
     isLogin: (state) => state.token ? true : false,
+    profile: (state) => state.profile
   },
   mutations: {
     SAVE_TOKEN: (state, token) => state.token = token,
-    SET_USER: (state, user) => state.user = user
+    SET_USER: (state, user) => state.user = user,
+    PROFILE_INFO: (state, profile) => state.profile = profile
   },
   actions: {
     login({commit, dispatch}, payload) {
@@ -43,7 +46,6 @@ const login = {
         headers: getters.authHead,
       })
         .then(res => {
-          console.log(res)
           commit('SET_USER', res.data)
         })
         //https://stackoverflow.com/questions/70198922/user-profile-update-using-dj-rest-auth-allauth > userinfo custom
@@ -53,7 +55,7 @@ const login = {
           headers: {
             "Content-Type": "multipart/form-data",
           },
-          url: `${API_URL}/accounts/signup`,
+          url: `${API_URL}/accounts/signup/`,
           method: 'post',
           data: formData
         })
@@ -80,6 +82,31 @@ const login = {
           console.log(err)
         })
     },
+    profileInfo({commit, getters}, user_pk){
+      axios({
+        url: `${API_URL}/user/profile/${user_pk}/`,
+        method: 'get',
+        headers: getters.authHead,
+      })
+        .then(res => {
+          commit('PROFILE_INFO', res.data)
+        })
+    },
+    fixFollower({dispatch, getters}, pk) {
+      axios({
+        url: `${API_URL}/user/follow/`,
+        method: 'post',
+        headers: getters.authHead,
+        data: {
+          "user_pk": pk
+        }
+      })
+        .then(res => {
+          console.log(res)
+          dispatch('profileInfo', pk)
+        })      
+    }
+
     // kakaoLogin({commit}) {
     //   window.Kakao.init('39caf5e8e7fed0bce24af6168049aae6')
     //   window.Kakao.Auth.login({
