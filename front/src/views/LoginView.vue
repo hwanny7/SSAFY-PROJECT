@@ -33,9 +33,6 @@ export default {
         'login', 'kakaoLogin' 
       ])
     },
-    created: {
-      
-    }
 }
 </script>
 

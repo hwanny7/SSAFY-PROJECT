@@ -7,7 +7,7 @@ from django.conf import settings
 # Create your models here.
 class Collection(models.Model):
     title = models.CharField(max_length=50)
-    content = models.TextField()
+    # content = models.TextField()  이거 넣나 마나?
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     open_public = models.BooleanField(default=False)
     movies = models.ManyToManyField(Movie, through='Movie_choice') # through 부분 확인하기

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import login from '@/store/modules/login.js'
 import collection from '@/store/modules/collection.js'
+import createPersistedState from 'vuex-persistedstate' // locali storage 에 저장
 
 
 
@@ -20,5 +21,8 @@ export default new Vuex.Store({
   modules: {
     login: login,
     collection: collection,
-  }
+  },
+  plugins: [
+    createPersistedState(),
+  ]
 })

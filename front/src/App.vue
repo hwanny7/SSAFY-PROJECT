@@ -5,7 +5,7 @@
         <router-link :to="{name : 'LoginView'}">Login</router-link>
       </div>
       <div v-else>
-        <!-- <router-link :to="{name : 'CollectionView', params: { id: user?.pk } }">Collection</router-link> | -->
+        <router-link :to="{name : 'AllCollection' }">Collection</router-link> |
         <router-link :to="{name : 'ProfileView', params: { id: user?.pk } }">Profile</router-link> |
         <button @click="logout">로그아웃</button>
       </div>
@@ -52,5 +52,16 @@ nav a {
 
 nav a.router-link-exact-active {
   color: #42b983;
+}
+
+.box {
+    width: 50px;
+    height: 50px; 
+}
+.profile {
+    width: 100%;
+    height: 100%;
+    border-radius: 30%;
+    object-fit: cover;
 }
 </style>

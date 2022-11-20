@@ -1,6 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator
+# from imagekit.models import ProcessedImageField, ImageSpecField
+# from imagekit.processors import ResizeToFill
+# from imagekit.processors import Thumbnail
 
 #email 넣으면 대상 컴퓨터 연결 거부 뜸
 class User(AbstractUser):

@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django_extensions',
     'collects',
     'movies',
+    'imagekit',
     # CORS policy
     'corsheaders',
 
