@@ -2,6 +2,7 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from django.contrib.auth import get_user_model
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+from .models import Worldcup
 from movies.serializers import MovieListSerializer
 from movies.models import Movie, Genre_count, Actor_count, Director_count
 import random
@@ -23,21 +24,21 @@ def worldcup(request, num):
         winners = request.data['winners']
         print(request.data['losers'])
         for loser in losers:
-            movie = Movie.objects.get(pk=loser['id'])
-            movie.one_game += 1
-            movie.game += 1
-            movie.save()
+            l_movie = Movie.objects.get(pk=loser['id'])
+            l_movie.one_game += 1
+            l_movie.game += 1
+            l_movie.save()
         
         candidate = []
         for winner in winners:
-            movie = Movie.objects.get(pk=winner['id'])
-            candidate.append(MovieListSerializer(movie).data)
+            w_movie = Movie.objects.get(pk=winner['id'])
+            candidate.append(MovieListSerializer(w_movie).data)
 
             if len(winners) <= 4:
                 person = get_object_or_404(User, pk=request.user.pk)
-                genres = movie.genres.all()
-                actors = movie.actors.all()
-                directors = movie.directors.all()
+                genres = w_movie.genres.all()
+                actors = w_movie.actors.all()
+                directors = w_movie.directors.all()
                 for genre in genres:
                     if person.genre_count_set.filter(genre_id=genre.id, user_id=person.id).exists():
                         gen = Genre_count.objects.get(genre_id=genre.id, user_id=person.id)
@@ -63,12 +64,18 @@ def worldcup(request, num):
                     else:
                         person.director_set.add(director, through_defaults={'cnt':1})
 
-            movie.one_game += 1
-            movie.game += 1
+            w_movie.one_game += 1
+            w_movie.game += 1
             if len(winners) == 1:
-                movie.game += 1
-                movie.victory += 1
-            movie.save()
+                worldcup = Worldcup.user.get(id=request.user.id)
+                if not worldcup.movies.filter(pk=w_movie.pk).exists():
+                    worldcup.movies.add(w_movie)
+                if not worldcup.movies.filter(pk=l_movie.pk).exists():
+                    worldcup.movies.add(l_movie)
+
+                w_movie.game += 1
+                w_movie.victory += 1
+            w_movie.save()
     
         return Response(candidate)
         

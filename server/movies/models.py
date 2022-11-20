@@ -39,7 +39,8 @@ class Movie(models.Model):
     poster_path = models.CharField(max_length=200)
     youtube_key = models.CharField(max_length=100)
     genres = models.ManyToManyField(Genre)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL)
+    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='like_movies')
+    hate_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='hate_movies')
     actors = models.ManyToManyField(Actor)
     directors = models.ManyToManyField(Director)
     one_game = models.IntegerField(default=0)
@@ -56,7 +57,7 @@ class UpcomingMovie(models.Model):
     genres = models.ManyToManyField(Genre)
     youtube_key = models.CharField(max_length=100)
 
-class RecommendedMovie(models.Model):
+class RecommendMovie(models.Model):
     title = models.CharField(max_length=100)
     release_date = models.DateField()
     popularity = models.FloatField()
@@ -66,16 +67,30 @@ class RecommendedMovie(models.Model):
     poster_path = models.CharField(max_length=200)
     youtube_key = models.CharField(max_length=100)
     genres = models.ManyToManyField(Genre)
-    like_users = models.ManyToManyField(settings.AUTH_USER_MODEL)
     actors = models.ManyToManyField(Actor)
     directors = models.ManyToManyField(Director)
-    movies = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    movie = models.ManyToManyField(Movie)
 
-class MovieReview(models.model):
+class SimilarMovie(models.Model):
+    title = models.CharField(max_length=100)
+    release_date = models.DateField()
+    popularity = models.FloatField()
+    vote_count = models.IntegerField()
+    vote_average = models.FloatField()
+    overview = models.TextField()
+    poster_path = models.CharField(max_length=200)
+    youtube_key = models.CharField(max_length=100)
+    genres = models.ManyToManyField(Genre)
+    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director)
+    movie = models.ManyToManyField(Movie)
+
+class MovieReview(models.Model):
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movies = models.ForeignKey(Movie, on_delete=models.CASCADE)
     content = models.TextField()
     vote = models.IntegerField()
-    block_users = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    block_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='block_reviews')
     banned = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DatetimeField(auto_now=True)
+    updated_at = models.DateTimeField(auto_now=True)

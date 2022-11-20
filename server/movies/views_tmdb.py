@@ -1,4 +1,4 @@
-from .models import UpcomingMovie
+from .models import UpcomingMovie, Movie, RecommendMovie, SimilarMovie, Director, Actor
 from django.http import JsonResponse, HttpResponse
 import requests
 from datetime import datetime
@@ -6,6 +6,8 @@ from pprint import pprint
 
 API_KEY = '4e117d07b2367287ebca5cffeff8a553'
 UPCOMING_MOVIE_URL = 'https://api.themoviedb.org/3/movie/upcoming'
+RECOMMEND_MOVIE_URL = 'https://api.themoviedb.org/3/movie/{movie_id}/recommendations'
+
 
 def get_youtube_key(movie_dict):    
     movie_id = movie_dict.get('id')
@@ -19,6 +21,40 @@ def get_youtube_key(movie_dict):
         if video.get('site') == 'YouTube':
             return video.get('key')
     return 'nothing'
+
+def get_actors(movie):
+    movie_id = movie.id
+    response = requests.get(
+        f'https://api.themoviedb.org/3/movie/{movie_id}/credits',
+        params={
+            'api_key': API_KEY,
+            'language': 'ko-kr',
+        }
+    ).json()
+    
+    for person in response.get('crew'):
+        if person.get('department') != 'Directing': continue
+        director_id = person.get('id')
+        if not Director.objects.filter(pk=director_id).exists():
+            director = Director.objects.create(
+                id=person.get('id'),
+                name=person.get('name')
+            )
+            movie.directors.add(director.id)
+            if movie.directors.count() == 2:
+                break
+
+    for person in response.get('cast'):
+        if person.get('known_for_department') != 'Acting': continue
+        actor_id = person.get('id')
+        if not Actor.objects.filter(pk=actor_id).exists():
+            actor = Actor.objects.create(
+                id=person.get('id'),
+                name=person.get('name')
+            )
+            movie.actors.add(actor.id)
+            if movie.actors.count() == 5:       # 5명의 배우 정보만 저장
+                break
 
 def movie_data(page=1):
     response = requests.get(
@@ -66,3 +102,66 @@ def get_upcoming_movie(request):
             movie_data(i)
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
+
+def movie_data2(mode, page=1):
+    movies = Movie.objects.all()
+    for movie in movies:
+        if mode == 'recommend':
+            URL = f'https://api.themoviedb.org/3/movie/{movie.id}/recommendations'
+            model = RecommendMovie
+        else:
+            URL = f'https://api.themoviedb.org/3/movie/{movie.id}/similar'
+            model = SimilarMovie
+
+        response = requests.get(
+            URL,
+            params={
+            'api_key': API_KEY,
+            'language': 'ko-KR',
+            'page': page,       
+        }).json()
+
+        for movie_dict in response.get('results'):
+            if not movie_dict.get('release_date'): continue   # 없는 필드 skip
+            if not movie_dict.get('poster_path'): continue
+            youtube_key = get_youtube_key(movie_dict)
+
+            if model.objects.filter(pk=movie_dict.get('id')).exists():
+                n_movie = model.objects.get(pk=movie_dict.get('id'))
+                n_movie.movie.add(movie)
+                continue
+        
+            new_movie = model.objects.create(
+                id=movie_dict.get('id'),
+                title=movie_dict.get('title'),
+                popularity=movie_dict.get('popularity'),
+                vote_count=movie_dict.get('vote_count'),
+                vote_average=movie_dict.get('vote_average'),
+                release_date=movie_dict.get('release_date'),
+                overview=movie_dict.get('overview'),
+                poster_path=movie_dict.get('poster_path'),   
+                youtube_key=youtube_key,     
+            )
+            new_movie.movie.add(movie)
+                
+
+            get_actors(new_movie)
+            for genre_id in movie_dict.get('genre_ids', []):
+                new_movie.genres.add(genre_id)
+
+            print(new_movie.title)
+
+
+def get_recommend_movie(request):
+    RecommendMovie.objects.all().delete()
+    for page in range(1,3):
+        movie_data2('recommend', page)
+
+    SimilarMovie.objects.all().delete()
+    for page in range(1,3):
+        movie_data2('similar')
+    return HttpResponse('OK!!!!!!!!!!!!!!!!!!')
+
+def get_similar_movie(request):
+    pass
+    return HttpResponse('OK!!!!!!!!!!!!!!!!!!')

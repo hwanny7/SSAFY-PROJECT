@@ -87,7 +87,7 @@ def movie_data(page=1):
         if not movie_dict.get('release_date'): continue   # 없는 필드 skip
         # 유투브 key 조회
         youtube_key = get_youtube_key(movie_dict)
-
+        if Movie.objects.filter(pk=movie_dict.get('id')).exists(): continue
         movie = Movie.objects.create(
             id=movie_dict.get('id'),
             title=movie_dict.get('title'),
@@ -108,12 +108,12 @@ def movie_data(page=1):
 
 
 def tmdb_data(request):
-    Genre.objects.all().delete()
-    Actor.objects.all().delete()
-    Movie.objects.all().delete()
-    Director.objects.all().delete()
+    # Genre.objects.all().delete()
+    # Actor.objects.all().delete()
+    # Movie.objects.all().delete()
+    # Director.objects.all().delete()
 
     tmdb_genres()
-    for i in range(1, 11):
+    for i in range(44, 60):
         movie_data(i)
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
