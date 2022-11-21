@@ -90,7 +90,13 @@ export default {
             }
         },
         pick(data) {
-            this.collection.movies.push(data)
+          this.collection.movies.forEach(movies => {
+            if (movies.id == data.id){
+              alert('이미 추가된 영화입니다.')
+              return >>> foreach로 하면 for문 말고 다른 걸로 해야함.
+            }
+          })
+          this.collection.movies.push(data)
         },
         reviseContent(data, id){
           let index

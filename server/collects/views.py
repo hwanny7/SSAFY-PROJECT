@@ -72,6 +72,7 @@ def collection(request): # collection 생성하면서 추가
     elif request.method == 'PUT':
         collection = get_object_or_404(Collection, pk=request.data['id'])
         movies = collection.movies.all()
+        print(request.data['movies'])
         for movie in movies:
             if movie.id not in request.data['movies']:
                 collection.movies.remove(movie)
