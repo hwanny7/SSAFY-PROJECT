@@ -6,7 +6,7 @@
             <input type="submit">
         </form>
         <h1>영화를 선택하세요.</h1>
-        <input type="text" v-model="search">
+        <input type="text" :value="search" @input="search=$event.target.value">
         <div class="d-flex flex-row flex-wrap">
             <CollectionCreateMovie
             v-for="(movie, index) in inputChange"  
@@ -103,9 +103,9 @@ export default {
             console.log(index)
             this.moviePick.splice(index, 1)
         },
-        created() {
-            this.CreateCollection()
-        }
+    },
+    created() {
+        this.CreateCollection()
     }
 }
 </script>
