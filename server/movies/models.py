@@ -47,6 +47,8 @@ class Movie(models.Model):
     win = models.IntegerField(default=0)
     game = models.IntegerField(default=0)
     victory = models.IntegerField(default=0)
+    recommendmovie = models.ManyToManyField('self', symmetrical=False, related_name='movierecommend')
+    similarmovie = models.ManyToManyField('self', symmetrical=False, related_name='moviesimilar')
 
 class UpcomingMovie(models.Model):
     updated_at = models.DateTimeField(auto_now_add=True)
@@ -56,34 +58,6 @@ class UpcomingMovie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     youtube_key = models.CharField(max_length=100)
-
-class RecommendMovie(models.Model):
-    title = models.CharField(max_length=100)
-    release_date = models.DateField()
-    popularity = models.FloatField()
-    vote_count = models.IntegerField()
-    vote_average = models.FloatField()
-    overview = models.TextField()
-    poster_path = models.CharField(max_length=200)
-    youtube_key = models.CharField(max_length=100)
-    genres = models.ManyToManyField(Genre)
-    actors = models.ManyToManyField(Actor)
-    directors = models.ManyToManyField(Director)
-    movie = models.ManyToManyField(Movie)
-
-class SimilarMovie(models.Model):
-    title = models.CharField(max_length=100)
-    release_date = models.DateField()
-    popularity = models.FloatField()
-    vote_count = models.IntegerField()
-    vote_average = models.FloatField()
-    overview = models.TextField()
-    poster_path = models.CharField(max_length=200)
-    youtube_key = models.CharField(max_length=100)
-    genres = models.ManyToManyField(Genre)
-    actors = models.ManyToManyField(Actor)
-    directors = models.ManyToManyField(Director)
-    movie = models.ManyToManyField(Movie)
 
 class MovieReview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
