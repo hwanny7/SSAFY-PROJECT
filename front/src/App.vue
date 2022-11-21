@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="text-white">
     <nav>
       <div v-if="!isLogin">
         <router-link :to="{name : 'LoginView'}">Login</router-link>

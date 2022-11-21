@@ -1,22 +1,35 @@
 <template>
     <div>
-        <form @submit.prevent="create">
-            <label for="title">title: </label>
-            <input type="text" id="title" v-model="title">
-            <input type="submit">
+      <div>
+        <form @submit.prevent="create" class="d-flex justify-content-center">
+          <div class="d-flex flex-row">
+            <input class="form-control me-2" type="search" placeholder="Collection Title" aria-label="Search" style="width: 20rem;" v-model="title">
+            <button class="btn btn-outline-success" type="submit">생성</button>
+          </div>
         </form>
-        <h1>영화를 선택하세요.</h1>
-        <input type="text" :value="search" @input="search=$event.target.value">
-        <div class="d-flex flex-row flex-wrap">
-            <CollectionCreateMovie
-            v-for="(movie, index) in inputChange"  
-            :key="`o-${index}`"
-            :movie="movie"
-            @pick="pick"
-            @update="update"
-            @del="del"
-            />
+        <div class="d-flex justify-content-center align-items-center mt-3">
+          <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :value="search" @input="search=$event.target.value" style="width: 50rem;">
         </div>
+      </div>
+      
+      <div class ="d-flex flex-row justify-content-center flex-wrap">
+        <ReviseForm
+        v-for="(movie, index) in moviePick"
+        :key="index"
+        :movie="movie"
+        @reviseContent="reviseContent"
+        @reviseDelete="reviseDelete"
+        />
+      </div>
+
+      <div class ="d-flex flex-row justify-content-center flex-wrap">
+        <CollectionCreateMovie
+        v-for="(movie, index) in inputChange"  
+        :key="`o-${index}`"
+        :movie="movie"
+        @pick="pick"
+        />
+      </div>
     </div>
 
 </template>
@@ -25,10 +38,13 @@
 import {mapGetters} from 'vuex'
 import axios from 'axios'
 import CollectionCreateMovie from '@/components/Collection/CollectionCreateMovie'
+import ReviseForm from '@/components/Collection/ReviseForm'
+
 
 export default {
     components: {
-        CollectionCreateMovie
+        CollectionCreateMovie,
+        ReviseForm,
     },
     data() {
         return {
@@ -81,28 +97,38 @@ export default {
             }
         },
         pick(data) {
-            this.moviePick.push(data)
-        },
-        update(data) { // 가능하면 dictionary 번호로 찾기
-            let index
-            for (let idx in this.moviePick){
-                if (this.moviePick[idx].id === data.id){
-                    index = idx
-                    break
-                }
+          for (let idx in this.moviePick){
+            if (data.id == this.moviePick[idx].id){
+              alert('이미 추가된 영화입니다.')
+              return
             }
-            this.moviePick.splice(index, 1, data)
+          }
+          this.moviePick.push(data)
         },
-        del(id) {
-            let index
-            for (let idx in this.moviePick){
-                if (this.moviePick[idx].id === id){
-                    index = idx
-                    break
-                }
+        reviseContent(data, id){
+          let index
+          let movie
+          for (let idx in this.moviePick){
+            if (this.moviePick[idx].id === id){
+              index = idx
+              movie = this.moviePick[idx]
+              break
             }
-            this.moviePick.splice(index, 1)
+          }
+          movie.content = data
+          this.moviePick.splice(index, 1, movie)
         },
+        reviseDelete(id){
+          let index
+          for (let idx in this.moviePick){
+            console.log(this.moviePick[idx])
+            if (this.moviePick[idx].id == id){
+              index = idx
+              break
+            }
+          }
+          this.moviePick.splice(index, 1)
+        }
     },
 }
 </script>
