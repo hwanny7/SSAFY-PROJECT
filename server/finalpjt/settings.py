@@ -33,10 +33,13 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Django Apps
     'accounts',
-    'rest_framework',
-    'django_extensions',
     'collects',
     'movies',
+    'worldcups',
+
+
+    'rest_framework',
+    'django_extensions',
     'imagekit',
     # CORS policy
     'corsheaders',
