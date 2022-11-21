@@ -1,10 +1,19 @@
 <template>
     <div>
-      <form @submit.prevent="revise">
-          <label for="title" >title: </label>
-          <input type="text" id="title" :value="collection.title" @input="collection.title=$event.target.value">
-          <input type="submit" value="수정하기">
+      <form @submit.prevent="revise" class="d-flex justify-content-center">
+        <div class="d-flex flex-row">
+            <input class="form-control me-2" type="search" aria-label="Search" style="width: 20rem;"
+            :value="collection.title" @input="collection.title=$event.target.value"
+            >
+            <button class="btn btn-outline-success" type="submit">수정</button>
+        </div>
       </form>
+        
+      <!-- search bar -->
+      <div class="d-flex justify-content-center align-items-center mt-3">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" :value="search" @input="search=$event.target.value" style="width: 50rem;">
+      </div>
+
       <div class ="d-flex flex-row justify-content-center flex-wrap">
         <ReviseForm
         v-for="(movie, index) in collection.movies"
@@ -14,8 +23,7 @@
         @reviseDelete="reviseDelete"
         />
       </div>
-      
-      <input type="text" :value="search" @input="search=$event.target.value">
+
       <div class ="d-flex flex-row justify-content-center flex-wrap">
           <CollectionCreateMovie
           v-for="(movie, index) in inputChange"  
@@ -128,11 +136,9 @@ export default {
           this.collection = res.data
         })
     },
-    beforeRouteUpdate(to, from, next){ 
-      // this.myCollections(to.params.id)
-      // this.profileInfo(to.params.id)
-      next()
-    }
+    // beforeRouteUpdate(to, from, next){ 
+    //   next()
+    // }
 
 } 
 // 라우터 막기 

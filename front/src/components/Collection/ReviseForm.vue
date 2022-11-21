@@ -1,8 +1,8 @@
 <template>
   <div>
-    <div class="card rounded d-flex justify-content-center align-items-center m-2 radius" style="width: 6rem;">
+    <div class="card rounded d-flex justify-content-center align-items-center m-2 radius">
       <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${movie.id}`" data-bs-whatever="@getbootstrap"
-      :class="{'existContent':movie.content}"
+      :class="{'glowing-border':movie.content}"
       >
     </div>
 
@@ -57,9 +57,20 @@ export default {
 <style>
 .existContent{
   border-style: solid;
-  border-width: 5px;
+  border-width: 3px;
   border-color: mediumaquamarine;
 }
+.glowing-border {
+    border: 2px solid #9ecaed;
+    border-radius: 7px;
+}
+
+.glowing-border:focus {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+}
+
 
 
 </style>

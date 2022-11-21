@@ -2,7 +2,6 @@
   <div>
     <div>
     <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="width:80px; height:80px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap"
-    :class="{'existContent':movie.content}"
     >
     </div>
     <div class="modal fade" :id="'o'+collectionId+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -49,11 +48,12 @@ export default {
 </script>
 
 <style>
-.existContent{
+/* .existContent{
   border-style: solid;
   border-width: 5px;
   border-color: mediumaquamarine;
-}
+      :class="{'existContent':movie.content}"
+} */
 
 
 </style>

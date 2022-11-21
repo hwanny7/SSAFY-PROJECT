@@ -4,7 +4,7 @@
     <div class="box">
     <img :src="'http://127.0.0.1:8000' + comment.user.image" alt="" class="profile">
     </div>
-    <p>{{comment.user.nickname}}: {{comment.content}}</p>
+    <p class="text-black">{{comment.user.nickname}}: {{comment.content}}</p>
     <button v-if="user.pk === comment.user.id"
     @click="commentDelete"
     >delete</button>
