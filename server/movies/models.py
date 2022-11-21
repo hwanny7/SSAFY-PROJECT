@@ -30,6 +30,7 @@ class Director_count(models.Model):
     cnt = models.IntegerField(default = 0)
 
 class Movie(models.Model):
+    adult = models.BooleanField()
     title = models.CharField(max_length=100)
     release_date = models.DateField()
     popularity = models.FloatField()

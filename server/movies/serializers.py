@@ -24,7 +24,6 @@ class DirectorSerializer(serializers.ModelSerializer):
 
 class ReviewSerializer(serializers.ModelSerializer):
 
-
     class Meta:
         model = MovieReview
         fields = ('id','content', 'vote', 'created_at','movies','user')
@@ -38,15 +37,23 @@ class MovieListSerializer(serializers.ModelSerializer):
         model = Movie
         fields = ('title', 'poster_path','id')
 
+# recommend, similar movie 포장할 serializer
+class RSMovieSerializer(serializers.ModelSerializer):
+    
+    class Meta:
+        model = Movie
+        fields = ('id','title','poster_path',)
+    
 # 영환 하나 골랐을 때 주는 serializer
 class MovieSerializer(serializers.ModelSerializer):
     genres = GenreSerializer(many=True)
     actors = DirectorSerializer(many=True)
     directors = DirectorSerializer(many=True)
-
+    recommendmovie = RSMovieSerializer(many=True)
+    similarmovie = RSMovieSerializer(many=True)
     review_set = ReviewSerializer(many=True, read_only=True)
     review_count = serializers.IntegerField(source='review_set.count', read_only=True)
 
     class Meta:
         model = Movie
-        fields = '__all__'
+        exclude = ('one_game', 'win', 'game', 'victory')

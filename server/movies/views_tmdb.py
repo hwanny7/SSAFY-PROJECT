@@ -91,6 +91,7 @@ def movie_data(page=1):
         youtube_key = get_youtube_key(movie_dict)
         if Movie.objects.filter(pk=movie_dict.get('id')).exists(): continue
         movie = Movie.objects.create(
+            adult = movie_dict.get('adult'),
             id=movie_dict.get('id'),
             title=movie_dict.get('title'),
             release_date=movie_dict.get('release_date'),
@@ -144,7 +145,9 @@ def upcoming_movie_data(page=1):
         for genre_id in movie_dict.get('genre_ids', []):
             movie.genres.add(genre_id)
 
+
 def recommend_movie_data(mode, page=1):
+
     movies = Movie.objects.all()
     for movie in movies:
         if mode == 'recommend':
@@ -161,39 +164,40 @@ def recommend_movie_data(mode, page=1):
             'language': 'ko-KR',
             'page': page,       
         }).json()
-
         for movie_dict in response.get('results'):
             if not movie_dict.get('release_date'): continue   # 없는 필드 skip
             if not movie_dict.get('poster_path'): continue
             youtube_key = get_youtube_key(movie_dict)
 
             find = Movie.objects.filter(pk=movie_dict.get('id'))
+            
             if find:
                 movie.recommendmovie.add(find[0])
                 print('오류2')
-
-            else:
-                print('오류3')
-                new_movie = Movie.objects.create(
-                    id=movie_dict.get('id'),
-                    title=movie_dict.get('title'),
-                    release_date=movie_dict.get('release_date'),
-                    popularity=movie_dict.get('popularity'),
-                    vote_count=movie_dict.get('vote_count'),
-                    vote_average=movie_dict.get('vote_average'),
-                    overview=movie_dict.get('overview'),
-                    poster_path=movie_dict.get('poster_path'),   
-                    youtube_key=youtube_key         
-                    )
+                print(movie.title)
+            # else:
+            #     print('오류3')
+            #     new_movie = Movie.objects.create(
+            #         adult = movie_dict.get('adult'),
+            #         id=movie_dict.get('id'),
+            #         title=movie_dict.get('title'),
+            #         release_date=movie_dict.get('release_date'),
+            #         popularity=movie_dict.get('popularity'),
+            #         vote_count=movie_dict.get('vote_count'),
+            #         vote_average=movie_dict.get('vote_average'),
+            #         overview=movie_dict.get('overview'),
+            #         poster_path=movie_dict.get('poster_path'),   
+            #         youtube_key=youtube_key         
+            #         )
                 
-                get_actors(new_movie)
+            #     get_actors(new_movie)
 
-                for genre_id in movie_dict.get('genre_ids', []):
-                    new_movie.genres.add(genre_id)
+            #     for genre_id in movie_dict.get('genre_ids', []):
+            #         new_movie.genres.add(genre_id)
 
-                movie.recommendmovie.add(new_movie)
+            #     movie.recommendmovie.add(new_movie)
 
-                print('>>>', new_movie.title, '==>', movie.youtube_key) 
+            #     print('>>>', new_movie.title, '==>', movie.youtube_key) 
 
 def get_upcoming_movie(request):
     if UpcomingMovie.objects.all().exists():
@@ -206,12 +210,10 @@ def get_upcoming_movie(request):
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 
 def get_recommend_movie(request):
-    # Movie.objects.update()
-    # return
+   
     for page in range(1,2):
         recommend_movie_data('recommend', page)
 
-    # Movie.objects.all().values('similarmovie').delete()
     for page in range(1,2):
         recommend_movie_data('similar', page)
     return HttpResponse('OK!!!!!!!!!!!!!!')
@@ -223,7 +225,7 @@ def get_movie(request):
     Director.objects.all().delete()
 
     tmdb_genres()
-    for i in range(1, 3):
+    for i in range(1, 60):
         movie_data(i)
     
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')

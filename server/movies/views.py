@@ -6,14 +6,15 @@ from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_cou
 from worldcups.models import Worldcup
 from django.contrib.auth import get_user_model
 from pprint import pprint
-import random
 # 나중에 지울거
+import random
 from django.http.response import JsonResponse
 
 
 # Create your views here.
 User = get_user_model()
 
+############################## 여기 수정해야함 ######################################
 @api_view(['GET', 'POST'])
 def select(request):
     if request.method == 'GET':
