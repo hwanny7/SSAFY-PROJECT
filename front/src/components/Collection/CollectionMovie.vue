@@ -13,18 +13,17 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-              <div class="mb-3" v-if="!onoff">
-                {{content}}
+              <div class="mb-3">
+                {{movie.content}}
               </div>
               <!-- <label for="message-text" class="col-form-label">댓글 작성: </label> -->
-              <textarea class="form-control" id="message-text" v-if="onoff" v-model="content"></textarea>
+              <!-- <textarea class="form-control" id="message-text"></textarea> -->
           </div>
-            <div class="modal-footer">
+            <!-- <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
-            v-if="onoff" @click="changeOnOff"
             >취소</button>
             <button type="button" class="btn btn-primary" @click="changeOnOff">수정</button>
-            </div>
+            </div> -->
         </div>
       </div>
     </div>
@@ -38,17 +37,12 @@ export default {
     name: 'CollectionMovie',
     data() {
       return {
-        content: this.movie.content,
-        onoff: 0,
       }
     },
     props: {
       movie: Object,
     },
     methods: {
-      changeOnOff() {
-        this.onoff = !this.onoff
-      }
     },
 }
 </script>
