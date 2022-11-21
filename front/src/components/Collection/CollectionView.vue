@@ -9,12 +9,14 @@
       </div>
       <div>
         <button v-if="user.pk === profilePk" @click="delCollection">Delete</button>
-        <p>제목: {{collection.title}}</p>
+        <router-link v-if="user.pk === profilePk" :to="{name: 'CollectionRevise', params: {pk: collection.id}}">수정하기</router-link>
+        <p>제목: {{collection.title}}</p> 
         <div class="d-flex">
           <CollectionMovie
-          v-for="(movie, index) in collection.movies"
-          :key="index"
+          v-for="(movie) in collection.movies"
+          :key="movie.id"
           :movie="movie"
+          :collection-id="collection.id"
           />
         </div>
       </div>

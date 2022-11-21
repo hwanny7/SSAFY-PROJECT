@@ -48,15 +48,15 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 
 
 @permission_classes([IsAuthenticatedOrReadOnly])
-@api_view(['GET', 'POST']) # 이게 있어야 홈페이지랑 postman에서 처리가 가능
+@api_view(['GET', 'POST', 'PUT']) # 이게 있어야 홈페이지랑 postman에서 처리가 가능
 def collection(request): # collection 생성하면서 추가
+    user = request.user
     if request.method == 'GET':
         collections = Collection.objects.all().order_by('-pk')
         serializers = AllCollectionSerializer(collections, many=True)
         return Response(serializers.data)
 
     elif request.method == 'POST':
-        user = request.user
         serializers = CollectionSerializer(data=request.data)
         if serializers.is_valid(raise_exception=True):
             collection = serializers.save(user=user) # 외래키는 빈칸으로 두고 넘어갈 수 없음
@@ -68,6 +68,34 @@ def collection(request): # collection 생성하면서 추가
 
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'PUT':
+        collection = get_object_or_404(Collection, pk=request.data['id'])
+        movies = collection.movies.all()
+        for movie in movies:
+            if movie.id not in request.data['movies']:
+                collection.movies.remove(movie)
+        serializers = CollectionSerializer(collection, data=request.data)
+        if serializers.is_valid(raise_exception=True):
+            serializers.save()
+            for obj in request.data.get('movies', ''): # 딕셔너리 형태로 보내기
+                if Movie_choice.objects.filter(movie_id=obj['id'], collection_id=collection.id).exists():
+                    exist = Movie_choice.objects.get(movie_id=obj['id'], collection_id=collection.id)
+                    exist.content = obj['content']
+                    exist.save()
+                else:
+                    movie = get_object_or_404(Movie, pk= obj['id'])
+                    collection.movies.add(movie, through_defaults={'content':f'{obj["content"]}', 'user':user})
+            return Response(serializers.data, status=status.HTTP_201_CREATED)
+        return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+@api_view(['GET'])
+def onecollection(request, collection_pk):
+    collection = get_object_or_404(Collection, pk=collection_pk)
+    serializers = CollectionSerializer(collection)
+    return Response(serializers.data, status=status.HTTP_202_ACCEPTED)
+
 
 
 @api_view(['GET'])

@@ -32,8 +32,8 @@
     </div>
     <hr>
     <CollectionView
-    v-for="(collection, index) in getMyCollections"
-    :key="index"
+    v-for="(collection) in getMyCollections"
+    :key="collection.id"
     :collection="collection"
     :profilePk="profile.pk"
     />

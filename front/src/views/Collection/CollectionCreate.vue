@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from 'vuex'
+import {mapGetters} from 'vuex'
 import axios from 'axios'
 import CollectionCreateMovie from '@/components/Collection/CollectionCreateMovie'
 
@@ -48,7 +48,7 @@ export default {
         inputChange() { // 공백여부 판단하기, 장르 필터도 같이 걸기, 양이 많으면 다음 페이지로 넘어가는 거
                         // 한글이라서 한칸 더 띄어쓰기 해야 인식이 되는 거 개선하기
             if (this.search === ''){
-                return this.getMoviePick
+                return 0
             } else {
                 const searchMovie = this.getMoviePick.filter( movie => {
                     return movie.title.split(' ').join('').includes(this.search.split(' ').join(''))
@@ -59,9 +59,6 @@ export default {
         }
     },
     methods: {
-        ...mapActions('collection', [
-          'CreateCollection',
-        ]),
         // title 공백 작성 막기
         create() {
             if (this.title){
@@ -89,24 +86,24 @@ export default {
         update(data) { // 가능하면 dictionary 번호로 찾기
             let index
             for (let idx in this.moviePick){
-                this.moviePick[idx].id === data.id
-                index = idx
+                if (this.moviePick[idx].id === data.id){
+                    index = idx
+                    break
+                }
             }
             this.moviePick.splice(index, 1, data)
         },
         del(id) {
             let index
             for (let idx in this.moviePick){
-                this.moviePick[idx].id === id
-                index = idx
+                if (this.moviePick[idx].id === id){
+                    index = idx
+                    break
+                }
             }
-            console.log(index)
             this.moviePick.splice(index, 1)
         },
     },
-    created() {
-        this.CreateCollection()
-    }
 }
 </script>
 

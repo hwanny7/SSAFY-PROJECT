@@ -1,127 +1,74 @@
 <template>
-  <div id="app">
-    <h1>Collection</h1>
-    <router-link :to="{name: 'CollectionCreate'}">생성하기</router-link> <br>
-    <button @click='send'>collection 클릭</button> <br>
-    <button @click='update'>update 클릭</button>
-    <form @submit.prevent="del">
-      <input type="number" v-model="pk">
-      <input type="submit">
-    </form>
-  </div>
-</template>
-
-<script>
-import axios from 'axios'
-import {mapGetters} from 'vuex'
-
-export default {
-  name: 'CollectionView',
-  components: {
-  },
-  data(){
-    return {
-      pk: null
-    }
-  },
-  computed: {
-    ...mapGetters('login', [
-        'user', 'authHead'
-    ]),
-  },
-  methods: {
-    send() {
-        axios({
-          url: 'http://127.0.0.1:8000/collects/collection/',
-          method: 'post',
-          headers: this.authHead,
-          data: {
-            title: '첫번째',
-            content: '첫번째',
-            movies: [597, 671, 808]
-          }
-        })
-          .then(res => {
-            console.log(res)
-          })
-    },
-    update() {
-      axios({
-        url: 'http://127.0.0.1:8000/collects/update/',
-        method: 'put',
-        data: {
-          title: '첫번째가 아닌',
-          content: '두번째가 아닌',
-          movies: [12444, 19995],
-          collection_pk: 1,
-        }
-      })
-        .then(res => {
-          console.log(res)
-        })      
-    },
-    del() {
-      axios({
-        url: 'http://127.0.0.1:8000/collects/update/',
-        method: 'delete',
-        data: {
-          collection_pk: this.pk,
-        }        
-      })
-    }
-  }
-}
-</script>
-
-<style>
-
-</style>
-
-
-<template>
   <div>
-    <h1>프로필</h1>
-    <img :src="user?.image" alt=""> <!--user가 로그인 했을 경우에만-->
-    <p>별명: {{user?.nickname}}</p>
-    <p>가입일: {{user?.date_joined}}</p>
-    <p>래이팅: {{user?.point}}</p>
-    <router-link :to="{name : 'CollectionCreate'}">Create</router-link>
-    <h1>Collection</h1>
-    <CollectionView
-    v-for="(collection, index) in getMyCollections"
-    :key="index"
-    :collection="collection"
-    />
-    <hr>
+        <div>
+            <p>{{movie.title}}</p>
+            <div>
+                <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="안보일때~" style = 'width:100px; height:100px;'
+                data-bs-toggle="modal" :data-bs-target="`#x${movie.id}`" data-bs-whatever="@getbootstrap"
+                >
+            </div>
+<!--모달-->
+<div class="modal fade" :id="'x'+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="mb-3">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text" v-model="content"></textarea>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button v-if="cnt" type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="movieDelete">삭제</button>
+        <button v-if="!cnt" type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="moviePick">추가</button>
+        <button v-if="cnt" type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="movieUpdate">변경</button>
+        
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
   </div>
 </template>
 
+
 <script>
-import { mapGetters, mapActions} from 'vuex'
-import CollectionView from '@/components/Collection/CollectionView'
 
-
+collectionCreatemovie
 
 export default {
-    name: 'ProfileView',
-    components: {
-      CollectionView, 
+    data() {
+        return {
+            content: '', // 사용자는 공백을 입력할수도 있음
+            cnt: 0,
+        }
     },
-    computed: {
-      ...mapGetters('login', [
-        'user', 'authHead'
-      ]),
-      ...mapGetters('collection', [
-        'getMyCollections'
-      ])
+    name: 'CollectionCreateMovie',
+    props: {
+        movie: Object
     },
     methods: {
-      ...mapActions('collection', [
-        'myCollections'
-      ])
-    },
-    created() {
-      this.myCollections(this.authHead)
+        moviePick() {
+            const movie = {...this.movie, ...{"content":this.content}}
+            this.cnt += 1
+            this.$emit('pick', movie)
+            console.log('pick')
+        },
+        movieUpdate() {
+            console.log('update')
+            const movie = {...this.movie, ...{"content":this.content}}
+            this.$emit('update', movie)
+        },
+        movieDelete() {
+          console.log('del')
+          this.$emit('del', this.movie.id)
+          this.cnt = 0
+          this.content = ''
+        }
     }
 }
 </script>

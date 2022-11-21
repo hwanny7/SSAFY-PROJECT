@@ -1,11 +1,11 @@
 <template>
   <div>
     <div>
-    <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="width:80px; height:80px;" data-bs-toggle="modal" :data-bs-target="`#o${movie.id}`" data-bs-whatever="@getbootstrap"
+    <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="width:80px; height:80px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap"
     :class="{'existContent':movie.content}"
     >
     </div>
-    <div class="modal fade" :id="'o'+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="'o'+collectionId+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -41,6 +41,7 @@ export default {
     },
     props: {
       movie: Object,
+      collectionId: Number,
     },
     methods: {
     },

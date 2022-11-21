@@ -4,11 +4,11 @@
             <p>{{movie.title}}</p>
             <div>
                 <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="안보일때~" style = 'width:100px; height:100px;'
-                data-bs-toggle="modal" :data-bs-target="`#o${movie.id}`" data-bs-whatever="@getbootstrap"
+                data-bs-toggle="modal" :data-bs-target="`#x${movie.id}`" data-bs-whatever="@getbootstrap"
                 >
             </div>
 <!--모달-->
-<div class="modal fade" :id="'o'+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" :id="'x'+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -22,10 +22,7 @@
           </div>
       </div>
       <div class="modal-footer">
-        <button v-if="cnt" type="button" class="btn btn-secondary" data-bs-dismiss="modal" @click="movieDelete">삭제</button>
-        <button v-if="!cnt" type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="moviePick">추가</button>
-        <button v-if="cnt" type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="movieUpdate">변경</button>
-        
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" @click="moviePick">추가</button>
       </div>
     </div>
   </div>
@@ -43,7 +40,6 @@ export default {
     data() {
         return {
             content: '', // 사용자는 공백을 입력할수도 있음
-            cnt: 0,
         }
     },
     name: 'CollectionCreateMovie',
@@ -53,18 +49,20 @@ export default {
     methods: {
         moviePick() {
             const movie = {...this.movie, ...{"content":this.content}}
-            this.cnt += 1
             this.$emit('pick', movie)
+            this.content =''
         },
-        movieUpdate() {
-            const movie = {...this.movie, ...{"content":this.content}}
-            this.$emit('update', movie)
-        },
-        movieDelete() {
-          this.$emit('del', this.movie.id)
-          this.cnt = 0
-          this.content = ''
-        }
+        // movieUpdate() {
+        //     console.log('update')
+        //     const movie = {...this.movie, ...{"content":this.content}}
+        //     this.$emit('update', movie)
+        // },
+        // movieDelete() {
+        //   console.log('del')
+        //   this.$emit('del', this.movie.id)
+        //   this.cnt = 0
+        //   this.content = ''
+        // }
     }
 }
 </script>

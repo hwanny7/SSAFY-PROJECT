@@ -26,7 +26,13 @@ export default {
     methods: {
       ...mapActions('login', [
         'logout'
-      ])
+      ]),
+      ...mapActions('collection', [
+        'CreateCollection',
+      ]),
+    },
+    created() {
+        this.CreateCollection()
     }
 }
 </script>

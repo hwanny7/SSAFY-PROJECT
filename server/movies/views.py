@@ -2,18 +2,19 @@ from django.shortcuts import render, get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer
-from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview, RecommendMovie, SimilarMovie
+from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview
 from worldcups.models import Worldcup
 from django.contrib.auth import get_user_model
 from pprint import pprint
-import random
 # 나중에 지울거
+import random
 from django.http.response import JsonResponse
 
 
 # Create your views here.
 User = get_user_model()
 
+############################## 여기 수정해야함 ######################################
 @api_view(['GET', 'POST'])
 def select(request):
     if request.method == 'GET':
@@ -177,22 +178,24 @@ def hate_movie(request):
 @api_view(['GET'])
 def MovieInform(request):
     if request.method == 'GET':
-        movie = get_object_or_404(Movie, pk=request.data.movie_pk)
+        movie = get_object_or_404(Movie, pk=11)
         serializer = MovieSerializer(movie)
         return Response(serializer.data)
 
 @api_view(['POST'])
 def review_create(request, movie_id):
+    user = User.objects.get(pk=1)
     movie = get_object_or_404(Movie, pk=movie_id)
+    print(user, movie)
     if request.method == 'POST':
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
-            serializer.save(moive=movie)
+            serializer.save(movies=movie, user=user)
             return Response(serializer.data)
     
 @api_view(['PUT', 'DELETE'])
-def review_datail(request, comment_pk):
-    review = get_object_or_404(MovieReview, pk=comment_pk)
+def review_datail(request, comment_id):
+    review = get_object_or_404(MovieReview, pk=comment_id)
     if request.method == 'PUT':
         serializer = ReviewSerializer(review, data=request.data)
         if serializer.is_valid(raise_exception=True):
@@ -224,7 +227,7 @@ def recommend(request):
         for rmovie in recommend_movies:
             point = Candidate.get(rmovie.id, 0)
             if point:
-                point = point[0]
+                point = point[0] + 5
             else:
                 point = 5
 
@@ -237,7 +240,7 @@ def recommend(request):
                     
             for actor in actors:
                 if Actor_count.objects.filter(user_id=request.user.id, actor_id=actor.id).exists():
-                    point += Genre_count.objects.filter(user_id=request.user.id, actor_id=actor.id)[0].cnt
+                    point += Actor_count.objects.filter(user_id=request.user.id, actor_id=actor.id)[0].cnt
                     
             for director in directors:
                 if Director_count.objects.filter(user_id=request.user.id, director_id=director.id).exists():

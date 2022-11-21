@@ -32,22 +32,7 @@ class CollectionReviewSerializer(serializers.ModelSerializer):
 
 class CollectionSerializer(serializers.ModelSerializer):
 
-#     class MovieSerializer(serializers.ModelSerializer):
-#         content = serializers.SerializerMethodField()
-
-#         class Meta:
-#             model = Movie
-#             fields = ('id', 'title', 'content')
-
-#         def get_content(self, obj):
-#             obj
-#             return obj['content']
-            
-
-
-#     movies = MovieSerializer(serializers.ModelSerializer, many = True, read_only = True)
     movies = serializers.SerializerMethodField()
-    # collection_review_set = CollectionReviewSerializer(many = True, read_only = True)
 
     class Meta:
         model = Collection
@@ -98,3 +83,21 @@ class AllCollectionSerializer(serializers.ModelSerializer):
                 dic['content'] = Movie_choice.objects.get(movie_id=movie.id, collection_id=obj.id).content
                 lst.append(dic)
             return lst
+
+
+
+#     class MovieSerializer(serializers.ModelSerializer):
+#         content = serializers.SerializerMethodField()
+
+#         class Meta:
+#             model = Movie
+#             fields = ('id', 'title', 'content')
+
+#         def get_content(self, obj):
+#             obj
+#             return obj['content']
+            
+
+
+#     movies = MovieSerializer(serializers.ModelSerializer, many = True, read_only = True)
+    # collection_review_set = CollectionReviewSerializer(many = True, read_only = True)

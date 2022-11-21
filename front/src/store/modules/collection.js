@@ -119,8 +119,7 @@ const collection = {
           console.log(res)
           dispatch('getComments', payload.collection_pk)
         })  
-    }
-
+    },
   }
 }
 
