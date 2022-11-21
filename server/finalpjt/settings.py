@@ -33,14 +33,14 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     # Django Apps
     'accounts',
-    'movies',
     'collects',
+    'movies',
     'worldcups',
 
-    # Third party Apps
+
     'rest_framework',
-
-
+    'django_extensions',
+    'imagekit',
     # CORS policy
     'corsheaders',
 
@@ -173,12 +173,21 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'accounts.User'
 
-MEDIA_ROOT = BASE_DIR / 'media'
-
-MEDIA_URL = '/media/'
-
 REST_AUTH_REGISTER_SERIALIZERS = {
     'REGISTER_SERIALIZER': 'accounts.serializers.CustomRegisterSerializer',
+} # 회원가입 serializer 수정
+
+
+REST_AUTH_SERIALIZERS = {
+    "USER_DETAILS_SERIALIZER": "accounts.serializers.CustomUserDetailsSerializer"
 }
 
-ACCOUNT_ADAPTER = 'accounts.adapters.CustomAccountAdapter'
+ACCOUNT_ADAPTER = 'accounts.adapters.UserAdapter'
+# 회원가입 adapter 추가
+
+MEDIA_ROOT = BASE_DIR / 'media'
+# 미디어 파일 저장할 공간 설정 (절대경로)
+
+MEDIA_URL = '/media/'
+# # 미디어 파일의 url 주소 설정
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'media')

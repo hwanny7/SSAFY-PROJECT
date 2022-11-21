@@ -1,16 +1,13 @@
 from allauth.account.adapter import DefaultAccountAdapter
+from allauth.account.utils import user_field
 
-
-class CustomAccountAdapter(DefaultAccountAdapter):
-
+class UserAdapter(DefaultAccountAdapter):
     def save_user(self, request, user, form, commit=True):
         data = form.cleaned_data
-        # 기본 저장 필드: first_name, last_name, username, email
         user = super().save_user(request, user, form, False)
-        # 추가 저장 필드: profile_image
-        profile_image = data.get("profile_image")
-        if profile_image:
-            user.profile_image = profile_image
-
+        data = form.cleaned_data
+        user.nickname = data.get('nickname')
+        user.image = data.get('image')
         user.save()
+
         return user
