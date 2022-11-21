@@ -151,9 +151,11 @@ def recommend_movie_data(mode, page=1):
     movies = Movie.objects.all()
     for movie in movies:
         if mode == 'recommend':
+            movie.recommendmovie.all().delete()
             URL = f'https://api.themoviedb.org/3/movie/{movie.id}/recommendations'
             model = Movie.recommendmovie
         else:
+            movie.similarmovie.all().delete()
             URL = f'https://api.themoviedb.org/3/movie/{movie.id}/similar'
             model = Movie.similarmovie
 
@@ -173,8 +175,7 @@ def recommend_movie_data(mode, page=1):
             
             if find:
                 movie.recommendmovie.add(find[0])
-                print('오류2')
-                print(movie.title)
+                print(movie.title , '<<<<<<', find[0].title)
             # else:
             #     print('오류3')
             #     new_movie = Movie.objects.create(
