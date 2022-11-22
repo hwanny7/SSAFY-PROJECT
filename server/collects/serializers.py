@@ -31,8 +31,8 @@ class CollectionReviewSerializer(serializers.ModelSerializer):
 
 
 class CollectionSerializer(serializers.ModelSerializer):
-
     movies = serializers.SerializerMethodField()
+    like_count = serializers.IntegerField(source='like_users.count', read_only=True)
 
     class Meta:
         model = Collection
@@ -58,7 +58,7 @@ class CollectionSerializer(serializers.ModelSerializer):
 
 class AllCollectionSerializer(serializers.ModelSerializer):
 #유저 정보랑 like, comment 부분 수정해야함
-
+    like_count = serializers.IntegerField(source='like_users.count', read_only=True)
     movies = serializers.SerializerMethodField()
     # collection_review_set = CollectionReviewSerializer(many = True, read_only = True)
     user = CustomUserDetailsSerializer()

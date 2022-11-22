@@ -6,6 +6,10 @@
             :value="collection.title" @input="collection.title=$event.target.value"
             >
             <button class="btn btn-outline-success" type="submit">수정</button>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" :checked="!collection.open_public" @click="collection.open_public = !collection.open_public">
+              <label class="form-check-label" for="flexSwitchCheckChecked">공개여부</label>
+            </div>
         </div>
       </form>
         

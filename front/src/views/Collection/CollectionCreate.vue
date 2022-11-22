@@ -5,6 +5,10 @@
           <div class="d-flex flex-row">
             <input class="form-control me-2" type="search" placeholder="Collection Title" aria-label="Search" style="width: 20rem;" v-model="title">
             <button class="btn btn-outline-success" type="submit">생성</button>
+            <div class="form-check form-switch">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" checked @click="open_public = !open_public">
+              <label class="form-check-label" for="flexSwitchCheckChecked">공개여부</label>
+            </div>
           </div>
         </form>
         <div class="d-flex justify-content-center align-items-center mt-3">
@@ -51,6 +55,7 @@ export default {
             title: '',
             moviePick: [],
             search: '',
+            open_public: false,
         }
     },
     name : "CollectionCreate",
@@ -85,7 +90,8 @@ export default {
                   data: {
                     title: this.title,
                     content: this.content,
-                    movies: this.moviePick
+                    movies: this.moviePick,
+                    open_public: this.open_public
                   }
                 })
                   .then(res => {

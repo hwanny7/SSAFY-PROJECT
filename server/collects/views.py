@@ -15,38 +15,6 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 #인증 관련 함수
 
 
-
-# @permission_classes([IsAuthenticatedOrReadOnly])
-# @api_view(['GET', 'POST']) # 이게 있어야 홈페이지랑 postman에서 처리가 가능
-# def collection(request): # collection 생성하면서 추가
-#     user = request.user
-#     if request.method == 'GET':
-#         collections = user.collection_set.all().order_by('-pk')
-#         serializers = AllCollectionSerializer(collections, many=True) # collectionlistserializer comments도 같이 출력하도록 변경
-#         return Response(serializers.data)
-
-#     elif request.method == 'POST':
-#         serializers = CollectionSerializer(data=request.data)
-#         if serializers.is_valid(raise_exception=True):
-#             collection = serializers.save(user=user) # 외래키는 빈칸으로 두고 넘어갈 수 없음
-#             for obj in request.data.get('movies', ''): # 딕셔너리 형태로 보내기
-#                 movie = get_object_or_404(Movie, pk= obj['id'])
-#                 collection.movies.add(movie, through_defaults={'content':f'{obj["content"]}', 'user':user}) # collection에 담은 movie choice
-#             # for movie in collection.movies.all():
-#             # 여기서 movie.content를 넣어도 될 것 같음
-
-#             return Response(serializers.data, status=status.HTTP_201_CREATED)
-#         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-# @api_view(['GET'])
-# @permission_classes([IsAuthenticatedOrReadOnly])
-# def allcollection(request):
-#     collections = get_list_or_404(Collection.objects.order_by('-pk'))
-#     serializers = AllCollectionSerializer(collections, many=True)
-#     return Response(serializers.data)
-
-
 @permission_classes([IsAuthenticatedOrReadOnly])
 @api_view(['GET', 'POST', 'PUT']) # 이게 있어야 홈페이지랑 postman에서 처리가 가능
 def collection(request): # collection 생성하면서 추가
@@ -63,9 +31,6 @@ def collection(request): # collection 생성하면서 추가
             for obj in request.data.get('movies', ''): # 딕셔너리 형태로 보내기
                 movie = get_object_or_404(Movie, pk= obj['id'])
                 collection.movies.add(movie, through_defaults={'content':f'{obj["content"]}', 'user':user}) # collection에 담은 movie choice
-            # for movie in collection.movies.all():
-            # 여기서 movie.content를 넣어도 될 것 같음
-
             return Response(serializers.data, status=status.HTTP_201_CREATED)
         return Response(serializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -141,15 +106,17 @@ def update(request, collection_pk): # 주소 통해서 collection 숫자 가져�
 
 @permission_classes([IsAuthenticatedOrReadOnly])
 @api_view(['POST']) # 내 게시글에 스스로 좋아요 누를 수 있음
-def like(request, collection_pk):
+def like(request):
     user = request.user
-    collection = Collection.objects.get(pk = collection_pk)
+    collection = Collection.objects.get(pk = request.data['collection_pk'])
     if collection.like_users.filter(pk = user.pk).exists():
-        collection.like_users.remove(request.user)
+        collection.like_users.remove(user)
+        collection.user.point -= 1
     else:
-        collection.like_users.add(request.user)
-    serializers = CollectionSerializer(collection)
-    return Response(serializers.data, status=status.HTTP_201_CREATED)
+        collection.like_users.add(user)
+        collection.user.point += 1
+    collection.user.save()
+    return Response(status=status.HTTP_202_ACCEPTED)
 
 
 

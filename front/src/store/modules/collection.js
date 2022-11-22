@@ -127,6 +127,34 @@ const collection = {
     },
     backGround({commit}, URL) {
       commit('BACK_GROUND', URL)
+    },
+    likeCol({dispatch}, payload) {
+      axios({
+        url: `${API_URL}/collects/like/`,
+        method: 'post',
+        headers: payload.headers,
+        data: {
+          collection_pk: payload.collection_pk
+        }
+      })
+        .then(res => {
+          console.log(res)
+          dispatch('AllCollections', payload.headers)
+        })  
+    },
+    likeColpro({dispatch}, payload) {
+      axios({
+        url: `${API_URL}/collects/like/`,
+        method: 'post',
+        headers: payload.headers,
+        data: {
+          collection_pk: payload.collection_pk
+        }
+      })
+        .then(res => {
+          console.log(res)
+          dispatch('myCollections', payload.id)
+        })  
     }
   }
 }

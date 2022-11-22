@@ -41,10 +41,8 @@ export default {
         const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
         console.log(url)
         this.backGround(url)
-        // document.getElementById('background').src=url
-        document.getElementById('body').style.backgroundImage=url
+        // document.getElementById('background').style.backgroundImage=url
         // document.body.style.backgroundImage = 'url(' + this.getBackImg + ')'
-        // 최신 영화 포스터가 해상도가 높고 깔끔함
     }
 }
 </script>
