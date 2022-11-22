@@ -24,8 +24,8 @@ def select(request):
 
 # like_movie, hate_movie는 안 펼치는게 정신 건강에 좋음....
 @api_view(['GET', 'POST'])
-def like_movie(request):
-    person = get_object_or_404(User, pk=request.user.pk)
+def like_movie(request, user_pk):
+    person = get_object_or_404(User, pk=user_pk)
 
     # 좋아요 목록 보여주기
     if request.method == 'GET':
@@ -38,6 +38,7 @@ def like_movie(request):
 
     # 좋아요 추가 삭제.
     elif request.method == 'POST':
+        print('진입')
         select = request.data
         movie = get_object_or_404(Movie, pk=int(select['movie']))
         genres = movie.genres.all()
@@ -66,7 +67,7 @@ def like_movie(request):
         # 영화를 좋아하는 사람 중에 유저가 없으면 -> 좋아요
         else:
             if movie.hate_users.filter(pk=person.pk).exists():
-                movie.like_users.remove(person)
+                movie.hate_users.remove(person)
             movie.like_users.add(person)
             for genre in genres:
                 if person.genre_count_set.filter(genre_id=genre.id, user_id=person.id).exists():
@@ -100,8 +101,8 @@ def like_movie(request):
             return Response({'data':'없습니다.'})
 
 @api_view(['GET', 'POST'])
-def hate_movie(request):
-    person = get_object_or_404(User, pk=request.user.pk)
+def hate_movie(request, user_pk):
+    person = get_object_or_404(User, pk=user_pk)
 
     # 좋아요 목록 보여주기
     if request.method == 'GET':
@@ -112,7 +113,7 @@ def hate_movie(request):
         else:
             return Response({'data':'싫어요를 누른 영화가 없습니다.'})
 
-    # 좋아요 추가 삭제.
+    # 싫어요 추가 삭제.
     elif request.method == 'POST':
         select = request.data
         movie = get_object_or_404(Movie, pk=int(select['movie']))
@@ -120,54 +121,54 @@ def hate_movie(request):
         actors = movie.actors.all()
         directors = movie.directors.all()
 
-        # 영화를 좋아하는 사람 중에 유저가 있으면 -> 좋아요 취소
-        if movie.like_users.filter(pk=person.pk).exists():
-            movie.like_users.remove(person)
+        # 영화를 싫어하는 사람 중에 유저가 있으면 -> 싫어요 취소
+        if movie.hate_users.filter(pk=person.pk).exists():
+            movie.hate_users.remove(person)
             for genre in genres:
                 gen = Genre_count.objects.get(genre_id=genre.id, user_id=person.id)
-                gen.cnt +=  10
+                gen.cnt +=  5
                 gen.save()
 
             
             for actor in actors:
                 act = Actor_count.objects.get(actor_id=actor.id, user_id=person.id)
-                act.cnt += 10
+                act.cnt += 5
                 act.save()
                 
             for director in directors:
                 dir = Director_count.objects.get(director_id=director.id, user_id=person.id)
-                dir.cnt += 10
+                dir.cnt += 5
                 dir.save()
 
-        # 영화를 좋아하는 사람 중에 유저가 없으면 -> 좋아요
+        # 영화를 싫어하는 사람 중에 유저가 없으면 -> 싫어요
         else:
             if movie.like_users.filter(pk=person.pk).exists():
-                movie.hate_users.remove(person)
-            movie.like_users.add(person)
+                movie.like_users.remove(person)
+            movie.hate_users.add(person)
             for genre in genres:
                 if person.genre_count_set.filter(genre_id=genre.id, user_id=person.id).exists():
                     gen = Genre_count.objects.get(genre_id=genre.id, user_id=person.id)
-                    gen.cnt = gen.cnt - 10
+                    gen.cnt = gen.cnt - 5
                     gen.save()
                     
                 else:
-                    person.genre_set.add(genre, through_defaults={'cnt':-10})
+                    person.genre_set.add(genre, through_defaults={'cnt':-5})
             
             for actor in actors:
                 if person.actor_set.filter(pk=actor.pk).exists():
                     act = Actor_count.objects.get(actor_id=actor.id, user_id=person.id)
-                    act.cnt -= 10
+                    act.cnt -= 5
                     act.save()
                 else:
-                    person.actor_set.add(actor, through_defaults={'cnt':-10})
+                    person.actor_set.add(actor, through_defaults={'cnt':-5})
 
             for director in directors:
                 if person.director_set.filter(pk=director.pk).exists():
                     dir = Director_count.objects.get(director_id=director.id, user_id=person.id)
-                    dir.cnt -= 10
+                    dir.cnt -= 5
                     dir.save()
                 else:
-                    person.director_set.add(director, through_defaults={'cnt':-10})
+                    person.director_set.add(director, through_defaults={'cnt':-5})
 
         if person.hate_movies.all():
             serializer = MovieListSerializer(person.hate_movies.all(), many=True)
@@ -176,25 +177,29 @@ def hate_movie(request):
             return Response({'data':'없습니다.'})
 
 @api_view(['GET'])
-def MovieInform(request):
+def moviedetail(request, movie_pk):
     if request.method == 'GET':
-        movie = get_object_or_404(Movie, pk=11)
+        movie = get_object_or_404(Movie, pk=movie_pk)
         serializer = MovieSerializer(movie)
         return Response(serializer.data)
 
-@api_view(['POST'])
+@api_view(['GET','POST'])
 def review_create(request, movie_id):
-    user = User.objects.get(pk=1)
     movie = get_object_or_404(Movie, pk=movie_id)
-    print(user, movie)
+    if request.method == 'GET':
+        reviews = movie.moviereview_set.all()
+        serializer = ReviewSerializer(reviews, many=True)
+        return Response(serializer.data)
+    
     if request.method == 'POST':
+        user = User.objects.get(pk=request.user.pk)
         serializer = ReviewSerializer(data=request.data)
         if serializer.is_valid(raise_exception=True):
             serializer.save(movies=movie, user=user)
             return Response(serializer.data)
     
 @api_view(['PUT', 'DELETE'])
-def review_datail(request, comment_id):
+def review_update(request, comment_id):
     review = get_object_or_404(MovieReview, pk=comment_id)
     if request.method == 'PUT':
         serializer = ReviewSerializer(review, data=request.data)
@@ -203,9 +208,19 @@ def review_datail(request, comment_id):
             return Response(serializer.data)
 
     if request.method == 'DELETE':
-        review.delete()
-        return Response({'data':'삭제 완료'})
+        if request.user.pk == review.user.pk :
+            review.delete()
+            return Response({'data':'삭제 완료'})
+        return Response({'data':'삭제할 수 없습니다.'})
 
+@api_view(['POST'])
+def review_block(request, comment_id):
+    if request.method == 'POST':
+        review = get_object_or_404(MovieReview, pk=comment_id)
+
+        if request.user.pk != review.user.pk :
+            review.block_users.add(request.user)
+            return Response({'data':'차단완료'})
 
 @api_view(['GET'])
 def recommend(request):

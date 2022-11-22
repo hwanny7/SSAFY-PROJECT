@@ -1,9 +1,6 @@
 from rest_framework import serializers
 from .models import (Movie, MovieReview, Actor, Genre, Director)
 
-
-
-
 class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -26,8 +23,8 @@ class ReviewSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = MovieReview
-        fields = ('id','content', 'vote', 'created_at','movies','user')
-        read_only_fields = ('movies','user',)
+        fields = ('id','content', 'vote', 'created_at','movies','user','block_users')
+        read_only_fields = ('movies','user','block_users')
         
 
 # 이건 전체를 주는 serializer
@@ -51,8 +48,8 @@ class MovieSerializer(serializers.ModelSerializer):
     directors = DirectorSerializer(many=True)
     recommendmovie = RSMovieSerializer(many=True)
     similarmovie = RSMovieSerializer(many=True)
-    review_set = ReviewSerializer(many=True, read_only=True)
-    review_count = serializers.IntegerField(source='review_set.count', read_only=True)
+    moviereview_set = ReviewSerializer(many=True, read_only=True)
+    moviereview_count = serializers.IntegerField(source='review_set.count', read_only=True)
 
     class Meta:
         model = Movie

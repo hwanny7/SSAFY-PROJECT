@@ -10,13 +10,19 @@
     </select>
   
     <div v-show="likehate === 'like'">
-      <LikeListView />
+      <LikeListView
+      :user-pk="user_pk"
+       />
     </div>
     <div v-show="likehate === 'hate'">
-      <HateListView />
+      <HateListView
+      :user-pk="user_pk"
+       />
     </div>
     <div v-show="likehate === 'all'">
-      이거는 아직
+      <MovieList
+      :user-pk="user_pk"
+       />
     </div>
 
   </div>
@@ -25,16 +31,19 @@
 <script>
 import HateListView from '@/components/HateListView'
 import LikeListView from '@/components/LikeListView'
+import MovieList from '@/components/MovieList'
 
 export default {
     name: 'LikeView',
     components: {
       HateListView,
       LikeListView,
+      MovieList,
     },
     data () {
       return {
         likehate: 'like',
+        user_pk : Number(this.$route.params.id)
       }
     },
     
