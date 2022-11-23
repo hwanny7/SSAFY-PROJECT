@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import (Movie, MovieReview, Actor, Genre, Director)
+from .models import (Movie, MovieReview, Actor, Genre, Director, UpcomingMovie)
 
 class GenreSerializer(serializers.ModelSerializer):
 
@@ -54,3 +54,9 @@ class MovieSerializer(serializers.ModelSerializer):
     class Meta:
         model = Movie
         exclude = ('one_game', 'win', 'game', 'victory')
+
+class UpcomingMovieSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = UpcomingMovie
+        fields = ('title','poster_path','id')

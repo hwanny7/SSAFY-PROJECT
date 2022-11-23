@@ -133,7 +133,11 @@ def upcoming_movie_data(page=1):
         if (year < now.year) or (month < now.month) or (day < now.day): continue
         # 유투브 key 조회
         youtube_key = get_youtube_key(movie_dict)
-
+        if youtube_key == 'nothing':
+            continue
+        cnt = len(UpcomingMovie.objects.all())
+        if cnt > 10:
+            return
         movie = UpcomingMovie.objects.create(
             id=movie_dict.get('id'),
             title=movie_dict.get('title'),
@@ -144,6 +148,8 @@ def upcoming_movie_data(page=1):
         )
         for genre_id in movie_dict.get('genre_ids', []):
             movie.genres.add(genre_id)
+        get_actors(movie)
+        print('>>>', movie.title, '==>', movie.youtube_key)
 
 
 def recommend_movie_data(mode, page=1):
@@ -175,29 +181,7 @@ def recommend_movie_data(mode, page=1):
                 movie.recommendmovie.add(find[0])
                 print('오류2')
                 print(movie.title)
-            # else:
-            #     print('오류3')
-            #     new_movie = Movie.objects.create(
-            #         adult = movie_dict.get('adult'),
-            #         id=movie_dict.get('id'),
-            #         title=movie_dict.get('title'),
-            #         release_date=movie_dict.get('release_date'),
-            #         popularity=movie_dict.get('popularity'),
-            #         vote_count=movie_dict.get('vote_count'),
-            #         vote_average=movie_dict.get('vote_average'),
-            #         overview=movie_dict.get('overview'),
-            #         poster_path=movie_dict.get('poster_path'),   
-            #         youtube_key=youtube_key         
-            #         )
-                
-            #     get_actors(new_movie)
-
-            #     for genre_id in movie_dict.get('genre_ids', []):
-            #         new_movie.genres.add(genre_id)
-
-            #     movie.recommendmovie.add(new_movie)
-
-            #     print('>>>', new_movie.title, '==>', movie.youtube_key) 
+           
 
 def get_upcoming_movie(request):
     if UpcomingMovie.objects.all().exists():
@@ -205,7 +189,7 @@ def get_upcoming_movie(request):
         UpcomingMovie.objects.all().delete()
         get_upcoming_movie(request)
     else:
-        for i in range(1, 20):
+        for i in range(1, 30):
             upcoming_movie_data(i)
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')
 

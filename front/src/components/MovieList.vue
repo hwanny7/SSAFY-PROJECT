@@ -16,7 +16,9 @@
           </div>
           <div class="modal-body">
             <div> {{ movieModal?.id }} </div>
-            <img :src="'https://themoviedb.org/t/p/original'+movieModal?.poster_path" alt="" style="width:200px; height:300px">
+            <div v-if="movieModal?.poster_path">
+              <img :src="'https://themoviedb.org/t/p/original'+movieModal?.poster_path" alt="" style="width:200px; height:300px">
+            </div>
             <div>{{ movieModal?.overview }}</div>
             <div>{{ movieModal?.genres }}</div>
             <div>
@@ -31,8 +33,8 @@
           </div>
           <div class="modal-footer">
             <div>
-              <button type="button" class="btn btn-danger" v-if="FindHate" @click="postlikemovie(movieModal?.id, 'hate'), reverse('hate')">싫어요 취소</button>
-              <button type="button" class="btn btn-danger" v-else  @click="postlikemovie(movieModal?.id, 'hate'), reverse('hate')">싫어요</button>
+              <button type="button" class="btn btn-danger" v-if="FindHate" @click="postlikemovie(movieModal?.id, 'hate')">싫어요 취소</button>
+              <button type="button" class="btn btn-danger" v-else  @click="postlikemovie(movieModal?.id, 'hate')">싫어요</button>
             </div>
             <div>
               <button type="button" class="btn btn-primary" v-if="FindLike" @click="postlikemovie(movieModal?.id, 'like')">좋아요 취소</button>
@@ -44,11 +46,11 @@
     </div>
 
     <span 
-    v-for="movie in movieSlice"
-    :key="movie.id">
-      <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
+    v-for="mmovie in movieSlice"
+    :key="mmovie.id">
+      <img :src="'https://themoviedb.org/t/p/original'+mmovie.poster_path" alt="" 
       style="width: 100px; height: 100px" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      @click="movieDetail(movie.id)"
+      @click="movieDetail(mmovie.id)"
       >
     </span>
   </div>
@@ -67,21 +69,20 @@ export default {
   },
   data() {
     return {
-      movieNum: 1,
+      movieNum: 0,
       hate: false,
       like: false,
     }
   },
   methods: {
-    
     beforeMovie() {
       if ((this.movieNum) > 1 ){
-        this.movieNum -= 1
+        this.movieNum -= 30
       }
     },
     afterMovie() {
-      if (this.GET_ALL_MOVIES[String(this.movieNum + 1)].length>0){
-        this.movieNum += 1
+      if (this.movieNum+30 < this.GET_ALL_MOVIES.length){
+        this.movieNum += 30
       }
     },
     movieDetail(movie_pk) {
@@ -89,7 +90,7 @@ export default {
       this.$store.dispatch('getReview', movie_pk)
     },
     postlikemovie(movie_pk, url){
-      console.log(movie_pk, url)
+      
       const data = {
         'moviePk':movie_pk,
         'userPk': this.userPk,
@@ -97,7 +98,6 @@ export default {
       }
       this.$store.dispatch('postLikeMovie', data)
     },
-
   },
   computed: {
     ...mapGetters(['GET_ALL_MOVIES', 'GET_DETAIL_MOVIE', 'GET_HATE_MOVIES', 'GET_LIKE_MOIVES']),
@@ -106,25 +106,19 @@ export default {
       return this.GET_DETAIL_MOVIE
     },
     movieSlice() {
-      const newMovie = this.GET_ALL_MOVIES[String(this.movieNum)]
-      return newMovie
+      return this.GET_ALL_MOVIES.slice(this.movieNum, this.movieNum + 30)
     },
     FindHate() {
       let hate = false
-      const arr = []
-      arr.forEach(movie => {
-        console.log('호잇', movie)
-      })
-      // this.GET_HATE_MOVIES.forEach(movie => {
-      //   if (movie.id === this.movieModal.id){
-      //     hate = true
-      //   }}
-      // );
+      this.GET_HATE_MOVIES.forEach(movie => {
+        if (movie.id === this.movieModal.id){
+          hate = true
+        }}
+      );
       return hate
     },
     FindLike() {
       let like = false
-      console.log(this.GET_LIKE_MOIVES)
       this.GET_LIKE_MOIVES.forEach(movie => {
         if (movie.id === this?.movieModal.id){
          like = true
@@ -133,19 +127,6 @@ export default {
       return like
     },
   },
-  created () {
-    const data1 = {
-      'url': 'like',
-      'userPk': this.user.pk
-    }
-    const data2 = {
-      'url': 'hate',
-      'userPk': this.user.pk
-    }
-    this.$store.dispatch('getAllMovie')
-    this.$store.dispatch('getLikeMovie', data1 )
-    this.$store.dispatch('getAllMovie', data2)
-  }
 }
 </script>
 

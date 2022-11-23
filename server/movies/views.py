@@ -1,8 +1,8 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer
-from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview
+from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer, RSMovieSerializer, UpcomingMovieSerializer
+from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview, UpcomingMovie
 from worldcups.models import Worldcup
 from django.contrib.auth import get_user_model
 from pprint import pprint
@@ -34,11 +34,10 @@ def like_movie(request, user_pk):
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else:
-            return Response({'data':'좋아요를 누른 영화가없습니다.'})
+            return Response(['없음'])
 
     # 좋아요 추가 삭제.
     elif request.method == 'POST':
-        print('진입')
         select = request.data
         movie = get_object_or_404(Movie, pk=int(select['movie']))
         genres = movie.genres.all()
@@ -98,7 +97,7 @@ def like_movie(request, user_pk):
             serializer = MovieListSerializer(person.like_movies.all(), many=True)
             return Response(serializer.data)
         else:
-            return Response({'data':'없습니다.'})
+            return Response(['없음'])
 
 @api_view(['GET', 'POST'])
 def hate_movie(request, user_pk):
@@ -111,7 +110,7 @@ def hate_movie(request, user_pk):
             serializer = MovieListSerializer(movies, many=True)
             return Response(serializer.data)
         else:
-            return Response({'data':'싫어요를 누른 영화가 없습니다.'})
+            return Response(['없음'])
 
     # 싫어요 추가 삭제.
     elif request.method == 'POST':
@@ -174,7 +173,7 @@ def hate_movie(request, user_pk):
             serializer = MovieListSerializer(person.hate_movies.all(), many=True)
             return Response(serializer.data)
         else:
-            return Response({'data':'없습니다.'})
+            return Response(['없음'])
 
 @api_view(['GET'])
 def moviedetail(request, movie_pk):
@@ -225,19 +224,22 @@ def review_block(request, comment_id):
 @api_view(['GET'])
 def recommend(request):
     person = get_object_or_404(User, pk=request.user.pk)
-    user_worldcup = Worldcup.user.get(pk=person.pk)
 
-
-    worldcup_movies = user_worldcup.movies.all()
+    worldcup = person.worldcup_set.all()
+    worldcup_movies = []
+    if worldcup:
+        worldcup_movies = worldcup[0].movies.all()
     like_movies = person.like_movies.all()
     hate_movies = person.hate_movies.all()
     
+    if len(worldcup_movies) + len(like_movies) < 3:
+        return Response(['없음'])
 
     # 좋아요 누른 영화랑 비슷한 영화
     Candidate ={}
     for movie in like_movies:
-        recommend_movies = movie.recommendMovie_set.all()
-        similar_movies = movie.similarmMovie_set.all()
+        recommend_movies = movie.recommendmovie.all()
+        similar_movies = movie.similarmovie.all()
 
         for rmovie in recommend_movies:
             point = Candidate.get(rmovie.id, 0)
@@ -261,9 +263,10 @@ def recommend(request):
                 if Director_count.objects.filter(user_id=request.user.id, director_id=director.id).exists():
                     point += Director_count.objects.filter(user_id=request.user.id, director_id=director.id)[0].cnt
             
-            Candidate[rmovie.id] = [point, rmovie.id, RecommendMovie]
+            Candidate[rmovie.id] = [point]
 
         for smovie in similar_movies:
+            point = Candidate.get(rmovie.id, 0)
             if point:
                 point = point[0]
             else:
@@ -283,11 +286,11 @@ def recommend(request):
                 if Director_count.objects.filter(user_id=request.user.id, director_id=director.id).exists():
                     point += Director_count.objects.filter(user_id=request.user.id, director_id=director.id)[0].cnt
             
-            Candidate[smovie.id] = [point, smovie.id, SimilarMovie]
+            Candidate[smovie.id] = [point]
 
     for movie in worldcup_movies:
-            recommend_movies = movie.recommendMovie_set.all()
-            similar_movies = movie.similarmMovie_set.all()
+            recommend_movies = movie.recommendmovie.all()
+            similar_movies = movie.similarmovie.all()
 
             for rmovie in recommend_movies:
                 point = Candidate.get(rmovie.id, 0)
@@ -311,9 +314,10 @@ def recommend(request):
                     if Director_count.objects.filter(user_id=request.user.id, director_id=director.id).exists():
                         point += Director_count.objects.filter(user_id=request.user.id, director_id=director.id)[0].cnt
                 
-                Candidate[rmovie.id] = [point, rmovie.id, RecommendMovie]
+                Candidate[rmovie.id] = [point]
 
             for smovie in similar_movies:
+                point = Candidate.get(rmovie.id, 0)
                 if point:
                     point = point[0]
                 else:
@@ -333,28 +337,36 @@ def recommend(request):
                     if Director_count.objects.filter(user_id=request.user.id, director_id=director.id).exists():
                         point += Director_count.objects.filter(user_id=request.user.id, director_id=director.id)[0].cnt
                 
-                Candidate[smovie.id] = [point, smovie.id, SimilarMovie]
+                Candidate[smovie.id] = [point]
 
     for movie in hate_movies:
         if Candidate.get(movie.id, 0):
             del(Candidate[movie.id])
 
-        similar_movies = movie.similarmMovie_set.all()
+        similar_movies = movie.similarmovie.all()
         for smovie in similar_movies:
             if Candidate.get(movie.id, 0):
                 del(Candidate[movie.id])
-            
-    movie_list = sorted(Candidate.values(), lambda x : x[0], reverse=True)
-
+    print('사이1')        
+    print(list(Candidate.items()))
+    print('사이2')
+    movie_list = sorted(Candidate.items(), key=lambda x: x[1][0],reverse=True)
+    if len(movie_list) > 20:
+        movie_list = movie_list[:20]
     res = []
     for info in movie_list:
-        if info[0] >= 0:
-            movie = info[2].objects.get(pk=info[1])
-            res.append(movie)
-        
-    serializer = MovieSerializer(res, many=True)
-    return Response(serializer.data)
+        res.append(Movie.objects.get(pk=info[0]))
+    if res:
+        serializer = RSMovieSerializer(res, many=True)
+        return Response(serializer.data)
 
+    return Response('없음')
 
-
+@api_view(['GET'])
+def upcoming(request):
+    if request.method == 'GET':
+        upcomingmovies = get_list_or_404(UpcomingMovie)
+        print(upcomingmovies)
+        serializer = UpcomingMovieSerializer(upcomingmovies, many=True)
+        return Response(serializer.data)
 

@@ -35,6 +35,7 @@ export default {
     },
     created() {
         this.CreateCollection()
+        this.$store.dispatch('getAllMovie')
     }
 }
 </script>

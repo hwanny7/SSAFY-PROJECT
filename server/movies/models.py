@@ -59,6 +59,8 @@ class UpcomingMovie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     youtube_key = models.CharField(max_length=100)
+    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director)
 
 class MovieReview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

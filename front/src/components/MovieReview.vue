@@ -4,10 +4,13 @@
       <div v-if="review.block_users.includes(user.pk)">
         <span> 차단한 메세지입니다. </span>
       </div>
+      <div v-else-if="review.block_users.count>5 & block">
+        <span @click='reverseblock()'> 다수의 이용자가 차단한 메세지 입니다. 그래도 보시겠습니까? (클릭) </span>
+      </div>
       <div v-else>
         {{ review }}
         <button @click="deleteReview(review.id)" v-if="user.pk === review.user">X</button>
-        <button @click="blockReview(review.id, user.pk)" v-if="user.pk != review.user">차단</button>
+        <button @click="blockReview(review.id)" v-if="user.pk != review.user">차단</button>
       </div>
     </div>
   </div>
@@ -21,6 +24,11 @@ export default {
   props: {
     movieId: Number,
   },
+  data() {
+    return{
+      block : true
+    }
+  },
   methods: {
     deleteReview(review_id) {
       const data = {
@@ -33,9 +41,13 @@ export default {
     blockReview(review_id) {
       const data = {
         'review_id': review_id,
-        'headers': this.authHead
+        'headers': this.authHead,
+        'movie_pk': this.movieId
       }
       this.$store.dispatch('blockReview', data)
+    },
+    reverseblock() {
+      this.block = false
     }
   },
   computed: {

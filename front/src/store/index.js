@@ -15,42 +15,51 @@ export default new Vuex.Store({
   state: {
     like_movies : Array,
     hate_movies : Array,
-    all_movies : Object,
+    all_movies : Array,
     detail_movie: Object,
     all_reviews : Array,
+    recommend_movies : Array,
+    upcoming_movies: Array,
   },
   getters: {
     GET_LIKE_MOIVES: (state) => state.like_movies,
     GET_HATE_MOVIES: (state) => state.hate_movies,
     GET_ALL_MOVIES: (state) => state.all_movies,
     GET_DETAIL_MOVIE: (state) => state.detail_movie,
-    GET_ALL_REVIEWS: (state) => state.all_reviews
+    GET_ALL_REVIEWS: (state) => state.all_reviews,
+    GET_REOCOMMEND_MOVIES : (state) => state.recommend_movies,
+    GET_UPCOMING_MOVIES : (state) => state.upcoming_movies
   },
   mutations: {
     LIKEMOVIES(state, movies) {
-      console.log(movies)
-      if (movies.length!=0) {
+      if (movies[0] != '없음') {
         state.like_movies = movies
+      } else {
+        state.like_movies = []
       }
     },
     HATEMOVIES(state, movies) {
-      console.log(movies)
-      if (movies.length!=0) {
+      if (movies[0] != '없음') {
         state.hate_movies = movies
+      } else {
+        state.hate_movies = []
       }
+      
     },
     ALLMOVIES(state, movies) {
-      let j=1
-      for (let i = 0; i<=movies.length; i = i + 30) {
-        state.all_movies[String(j)] = movies.slice(i,i+30)
-        j += 1
-      }
+      state.all_movies = movies
     },
     DETAILMOVIE(state, movie){
       state.detail_movie = movie
     },
     ALLREVIEWS(state, review) {
       state.all_reviews = review
+    },
+    RECOMMENDMOVIES(state, movies) {
+      state.recommend_movies = movies
+    },
+    UPCOMINGMOVIE(state,movies) {
+      state.upcoming_movies = movies
     }
   },
   actions: {
@@ -89,7 +98,6 @@ export default new Vuex.Store({
         method: 'get',
       })
         .then(res => {
-          console.log(typeof(res.data))
           context.commit('DETAILMOVIE', res.data)
         })
         .catch(err => {
@@ -131,6 +139,7 @@ export default new Vuex.Store({
         })
     },
     postReview(context, info){
+      
       axios({
         url: `${API_URL}/movies/${info.movie_pk}/review_create/`,
         method: 'post',
@@ -141,7 +150,7 @@ export default new Vuex.Store({
         }
       })
         .then(res => {
-          console.log(res)
+          res
           context.dispatch('getReview', info.movie_pk)
           return
         })
@@ -156,7 +165,7 @@ export default new Vuex.Store({
         headers: info.headers,
       })
         .then(res => {
-          console.log(res)
+          res
           context.dispatch('getReview', info.movie_pk)
           return
         })
@@ -171,9 +180,36 @@ export default new Vuex.Store({
         headers: info.headers,
       })
         .then(res => {
-          console.log(res)
+          res
           context.dispatch('getReview', info.movie_pk)
           return
+        })
+        .catch(err => {
+          console.log(err)
+        })
+    },
+    getRecommendMovie(context,headers){
+      context
+      axios({
+        url: `${API_URL}/movies/recommend/`,
+        method : 'get',
+        headers: headers,
+      })
+        .then (res => {
+          context.commit('RECOMMENDMOVIES', res.data)
+        })
+        .catch (err => {
+          console.log(err.data)
+        })
+    },
+    getUpcomingMovie(context){
+      context
+      axios({
+        url: `${API_URL}/movies/upcoming/`,
+        method: 'get'
+      })
+        .then(res => {
+          context.commit('UPCOMINGMOVIE', res.data)
         })
         .catch(err => {
           console.log(err)
