@@ -1,13 +1,15 @@
 <template>
   <div class="d-flex">
-    <!-- <p>{{comment.user.}}</p> -->
-    <div class="boxx">
+    <div class="boxx mt-3 float-start">
     <img :src="'http://127.0.0.1:8000' + comment.user.image" alt="" class="profile">
     </div>
-    <p class="text-black">{{comment.user.nickname}}: {{comment.content}}</p>
-    <button v-if="user.pk === comment.user.id"
-    @click="commentDelete"
-    >delete</button>
+    <p class="text-black text-center">{{comment.user.nickname}}: {{comment.content}}</p>
+    <!-- <div class="d-flex flex-row align-items-center">
+      <button v-if="user.pk === comment.user.id"
+      class="btn btn-warning p-1"
+      @click="commentDelete"
+      >delete</button>
+    </div> -->
   </div>
 </template>
 

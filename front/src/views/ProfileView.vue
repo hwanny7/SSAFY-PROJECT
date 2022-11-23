@@ -1,36 +1,47 @@
 <template>
   <div>
-    <h1>프로필</h1>
-    <div>
-      <p>포인트: {{profile.point}}</p>
-      <p>별명: {{profile.nickname}}</p>
-      <img v-if="profile.point <= 1" src="@/assets/브론즈.png" alt="" style="height:50px; width:50px;">
-      <img v-if="1 < profile.point && profile.point <= 3" src="@/assets/다이아.png" alt="" style="height:50px; width:50px;">
-      <img v-if="3 < profile.point && profile.point <= 5" src="@/assets/마스터.png" alt="" style="height:50px; width:50px;">
-      <img v-if="5 < profile.point" src="@/assets/챌린저.png" alt="" style="height:50px; width:50px;">
-      <img :src="'http://127.0.0.1:8000' + profile.image" alt="" style="width:100px; heigh:80px;"> <!--user가 로그인 했을 경우에만-->
-      <div v-if="profile.pk != user.pk">
-        <div v-if="profile.followers.includes(user.pk)">
-          <button @click="fixFollower(profile.pk)">언팔로우</button>
-        </div>
-        <div v-else>
-          <button @click="fixFollower(profile.pk)">팔로우</button>
-        </div>
+    <div class="card bg-dark rounded-3" style="width: 18rem;">
+      <img :src="'http://127.0.0.1:8000' + profile.image" class="card-img-top" alt="">
+      <div class="card-body">
+        <h5 class="card-title">{{profile.nickname}}</h5>
+        <p>{{profile.date_joined.slice(0, 10)}}</p>
+        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        <button class="btn btn-primary" 
+        v-if="profile.pk != user.pk" @click="fixFollower(profile.pk)"
+        >{{profile.followers.includes(user.pk) ? "Unfollow" : "follow"}}</button>
+        <button class="btn btn-primary" v-if="profile.pk == user.pk">
+          <router-link :to="{name : 'CollectionCreate'}" style ="text-decoration: none;" class="text-white">Create</router-link></button>
       </div>
-      <p>가입일: {{profile.date_joined.slice(0, 10)}}</p>
-      <p>팔로워: {{profile.followers_count}}명</p>
-      <div class="d-flex justify-content-center">
-        <div v-for="(follower, index) in profile.followers_info"
-        :key="index"
-        >
-          <div class="boxx">
+    </div>
+    <div>
+
+    <!-- <swiper
+    :effect="'cards'"
+    :grabCursor="true"
+    :modules="modules"
+    class="mySwiper"
+    >
+    <swiper-slide>Slide 1</swiper-slide><swiper-slide>Slide 2</swiper-slide
+    ><swiper-slide>Slide 3</swiper-slide><swiper-slide>Slide 4</swiper-slide
+    ><swiper-slide>Slide 5</swiper-slide><swiper-slide>Slide 6</swiper-slide
+    ><swiper-slide>Slide 7</swiper-slide><swiper-slide>Slide 8</swiper-slide
+    ><swiper-slide>Slide 9</swiper-slide>
+    </swiper> -->
+
+
+      <!-- <p>가입일: {{profile.date_joined.slice(0, 10)}}</p>
+      <p>팔로워: {{profile.followers_count}}명</p> -->
+    <div class="d-flex justify-content-center">
+      <div v-for="(follower, index) in profile.followers_info"
+      :key="index"
+      >
+        <div class="boxx">
             <img :src="'http://127.0.0.1:8000' + follower.image" alt="" class="profile">
           </div>
         </div>
       </div>
-    </div>
-    <div v-if="user.pk == profile.pk">
-      <router-link :to="{name : 'CollectionCreate'}">Create</router-link>
+      </div>
+      <div v-if="user.pk == profile.pk">
     </div>
 
     <ProfileCollectionView
@@ -48,17 +59,42 @@
 import { mapGetters, mapActions} from 'vuex'
 import ProfileCollectionView from '@/components/Collection/ProfileCollectionView'
 
+// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+// import { EffectCards } from "swiper";
 
 
 export default {
     name: 'ProfileView',
     components: {
-      ProfileCollectionView, 
+      ProfileCollectionView,
+      // Swiper,
+      // SwiperSlide,
     },
+    // setup() {
+    //   return {
+    //     modules: [EffectCards],
+    //   }
+    // },
     data() {
       return {
         id: this.$route.params.id,
-        rating: 0,
+        swiperOption: { 
+        slidesPerView: 5, 
+        spaceBetween: 30, 
+        effect:'coverflow',
+        grabCursor:"true",
+        centeredSlides:"true",
+        coverflowEffect:{
+          rotate: 30,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        },
+        pagination:"true",
+        modules:"modules",
+        class:"mySwiper",
+      },
       }
     },
     computed: {
@@ -94,5 +130,58 @@ export default {
 </script>
 
 <style>
+.swiper {
+  width: 240px;
+  height: 320px;
+}
 
+.swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 18px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #fff;
+}
+
+.swiper-slide:nth-child(1n) {
+  background-color: rgb(206, 17, 17);
+}
+
+.swiper-slide:nth-child(2n) {
+  background-color: rgb(0, 140, 255);
+}
+
+.swiper-slide:nth-child(3n) {
+  background-color: rgb(10, 184, 111);
+}
+
+.swiper-slide:nth-child(4n) {
+  background-color: rgb(211, 122, 7);
+}
+
+.swiper-slide:nth-child(5n) {
+  background-color: rgb(118, 163, 12);
+}
+
+.swiper-slide:nth-child(6n) {
+  background-color: rgb(180, 10, 47);
+}
+
+.swiper-slide:nth-child(7n) {
+  background-color: rgb(35, 99, 19);
+}
+
+.swiper-slide:nth-child(8n) {
+  background-color: rgb(0, 68, 255);
+}
+
+.swiper-slide:nth-child(9n) {
+  background-color: rgb(218, 12, 218);
+}
+
+.swiper-slide:nth-child(10n) {
+  background-color: rgb(54, 94, 77);
+}
 </style>

@@ -1,4 +1,4 @@
-<template>
+<template> <!--안 쓰고 있는 창 지워도 됨-->
   <div>ent-center alig
     <div class="card rounded d-flex justify-contn-items-center m-2 radius sample_image">
     <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap"

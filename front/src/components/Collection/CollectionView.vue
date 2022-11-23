@@ -2,7 +2,8 @@
   <div v-if="!collection.open_public">
     <button v-if="user.pk === profilePk" @click="delCollection">Delete</button>
     <router-link v-if="user.pk === profilePk" :to="{name: 'CollectionRevise', params: {pk: collection.id}}">수정하기</router-link>
-
+        
+        <h3 class="text-center">{{collection.title}} </h3> 
       <div>
         <div class='d-flex flex-row justify-content-center'>
           <div class="d-flex flex-column align-items-center" v-if="$route.name != 'ProfileView'"> <!--닉네임, 사진-->
@@ -13,7 +14,19 @@
               <router-link :to="{name: 'ProfileView', params: {id: collection.user.pk}}">{{collection.user.nickname}}</router-link>
             </div>
         </div>
-        <h3 class="text-center">{{collection.title}} </h3> 
+        <div class="d-flex">
+          {{collection.like_count ? collection.like_count:''}}
+          <span class="hex-icon-heart" @click="likeCollection(collection.id)">
+            <svg>
+              <path d="M19,1 Q21,0,23,1 L39,10 Q41.5,11,42,14 L42,36 Q41.5,39,39,40 L23,49 Q21,50,19,49 L3,40 Q0.5,39,0,36 L0,14 Q0.5,11,3,10 L19,1" />
+              <path :style="{fill: MYcolor}" d="M11,17 Q16,14,21,20 Q26,14,31,17 Q35,22,31,27 L21,36 L11,27 Q7,22,11,17" />
+            </svg>
+          </span>
+          <button class="btn btn-info" data-bs-toggle="modal" :data-bs-target="`#o${collection.id}`" data-bs-whatever="@getbootstrap"
+          @click="getComment"
+          >댓글 보기</button>
+          </div>
+        </div>
       </div>
 
       <div class="d-flex flex-column align-items-center">
@@ -38,16 +51,6 @@
           </swiper-slide>
         </swiper>
 
-        <div class="d-flex">
-          <div v-if="user.pk != collection.user">
-            <button v-if="collection.like_users.includes(user.pk)" @click="likeCollection(collection.id)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요 취소</button>
-            <button v-else @click="likeCollection(collection.id)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요</button>
-          </div>
-          <button class="btn btn-info" data-bs-toggle="modal" :data-bs-target="`#o${collection.id}`" data-bs-whatever="@getbootstrap"
-          @click="getComment"
-          >댓글 보기</button>
-          </div>
-        </div>
     </div>
     
   
@@ -85,24 +88,19 @@
 
 <script>
 
-// const swiper = new Swiper('.swiper', {
-//    onAny(click, event) {
-//      console.log('hi');
-//    }
-//  });
 
 import CollectionComment from '@/components/Collection/CollectionComment'
 import {mapGetters} from 'vuex'
 
 
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
+// import "swiper/css/swiper.css";
 
 export default {
     name: 'CollectionView',
     data() {
       return {
-        // content: '',
+        content: '',
         swiperOption: { 
         slidesPerView: 5, 
         spaceBetween: 30, 
@@ -133,7 +131,10 @@ export default {
       ]),
       ...mapGetters('collection', [
         'getComments',
-      ])
+      ]),
+      MYcolor() {
+        return this.collection.like_users.includes(this.user.pk) ? "red" : "white"
+      }
     },
     props: {
         collection: Object,
@@ -250,5 +251,9 @@ export default {
   white-space: nowrap;
   text-transform: uppercase;
 }
+
+
+/* 좋아요 버튼 */
+
 
 </style>
