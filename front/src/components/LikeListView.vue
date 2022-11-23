@@ -9,14 +9,21 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <div> {{ movieModal?.id }} </div>
             <div v-if="movieModal?.poster_path">
-              <img :src="'https://themoviedb.org/t/p/original'+movieModal?.poster_path" alt="" style="width:200px; height:300px">
+              <div class="row">
+                <div class="col">
+                    <iframe :src="'https://www.youtube.com/embed/'+ `${movieModal.youtube_key}`" frameborder="1"></iframe>
+                </div>
+                <div class="col">
+                  <div>
+                    {{ movieModal?.overview }}
+                  </div>
+                  <span v-for="genre in movieModal?.genres" :key="genre.id" >{{ genre.name+" " }}</span>
+                </div>
+              </div>
             </div>
-            <div>{{ movieModal?.overview }}</div>
-            <div>{{ movieModal?.genres }}</div>
+
             <div>
-              <h4>Review</h4>
               <MovieReview
               :movie-id="movieModal?.id"
               />
@@ -38,34 +45,56 @@
         </div>
       </div>
     </div>
+    <!-- <swiper class="swiper" :options="swiperOption" v-if="GET_LIKE_MOIVES.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
+          <swiper-slide v-for="movie in GET_LIKE_MOIVES" :key="movie.id" class="bg-dark">
+            <div class="box-wrap">
+              <div class="box">
+                <div class="img">
+                  <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
+                   data-bs-toggle="modal"
+                  data-bs-target="#exampleModal_like"
+                  class="rounded-4"
+                  @click="movieDetail(movie.id)"
+                  >
+                </div>
+                
+              </div>
+            </div>
+          </swiper-slide>
+        </swiper> -->
+
 
     <swiper
     class="swiper"
-    :options="swiperOption" >
+    :options="swiperOption"
+     >
 
     <swiper-slide
      v-for="movie in GET_LIKE_MOIVES"
-    :key="movie.id">
+    :key="movie.id"
+    
+    >
     <div class="box-wrap"> 
-      <div class='box mt-0 mp-0' style='width:400px; height:700px;'>
+      <div class='box mt-0 mp-0' style="width:400px; height:610px;">
         <div class="img">
           <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
-            type="button" data-bs-toggle="modal"
-            data-bs-target="#exampleModal_like"
             class="rounded-4"
+            style="width:400px; height:610px;"
             @click="movieDetail(movie.id)"
+            data-bs-target="#exampleModal_like" 
+            type="button" 
+            data-bs-toggle="modal"
             >
         </div>
       </div>
     </div>
-    </swiper-slide>     
-    
-    <!-- <div
-        class="swiper-pagination"
-        slot="pagination"
-        >
-    </div> -->
-</swiper>
+    </swiper-slide>
+  </swiper>
+  <div v-show="true">
+    <button id="BTS">
+            상세보기
+          </button>
+  </div>
   </div>
 </template>
 
@@ -73,9 +102,11 @@
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 
+
 import {mapGetters} from 'vuex'
 import MovieReview from '@/components/MovieReview'
 import ReviewInput from '@/components/ReviewInput'
+
 
 export default {
     name: 'LikeListView',
@@ -91,10 +122,11 @@ export default {
     },
     data() {
       return {
+        showedmovie: null,
         like : true,
         hate : false,
         swiperOption: { 
-        slidesPerView: 1, 
+        slidesPerView: 5, 
         spaceBetween: 30, 
         loop: true, 
         pagination: { 
@@ -133,6 +165,15 @@ export default {
         }
         this.$store.dispatch('postLikeMovie', data)
       },
+      showMovie(){
+        // const divTag = document.querySelector('#exampleModal_like')
+        // divTag.show()
+        const btnTag = document.querySelector('#BTS')
+        btnTag.onclick()
+       
+        
+      }
+    
     },
     computed: {
       ...mapGetters(['GET_LIKE_MOIVES','GET_DETAIL_MOVIE']),
@@ -145,7 +186,14 @@ export default {
       const data1 = {userPk:this.$route.params.id, url:'like'}
       this.$store.dispatch('getLikeMovie', data1)
     },
+    mounted() {
+      
+    }
+    
 }
+
+
+
 </script>
 
 <style>
@@ -164,6 +212,37 @@ export default {
 }
 .box img {
   width: 100%;
+}
+
+.swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 

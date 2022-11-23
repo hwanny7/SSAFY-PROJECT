@@ -1,10 +1,17 @@
 <template>
   <div>
-    <h1>ReviewInput</h1>
-      <star-rating id=setstar :star-size="30" v-model="rating" :increment="0.5" :border-width="5" border-color="#d8d8d8" :rounded-corners="true" :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]">
-    </star-rating>
-    <input type="text" v-model.trim="content" @keyup.enter='postreview'>
-    <button @click="postreview">댓글달기</button>
+    <div>
+      <star-rating
+      id=setstar :star-size="30" v-model="rating" 
+      :increment="0.5" :border-width="5" border-color="#d8d8d8"
+      
+      :rounded-corners="true" :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]">
+      </star-rating>
+      <div></div>
+      <input type="text" v-model.trim="content" @keyup.enter='postreview' class="col-6">
+      <div></div>
+      <button @click="postreview">작성</button>
+    </div>
   </div>
 </template>
 

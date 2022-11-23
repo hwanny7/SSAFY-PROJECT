@@ -182,7 +182,6 @@ def recommend_movie_data(mode, page=1):
                 print('오류2')
                 print(movie.title)
            
-
 def get_upcoming_movie(request):
     if UpcomingMovie.objects.all().exists():
 

@@ -1,5 +1,13 @@
 from rest_framework import serializers
 from .models import (Movie, MovieReview, Actor, Genre, Director, UpcomingMovie)
+from dj_rest_auth.serializers import UserDetailsSerializer
+from django.contrib.auth import get_user_model
+
+class CustomUserDetailsSerializer2(UserDetailsSerializer):
+
+    class Meta(UserDetailsSerializer.Meta):
+        fields = UserDetailsSerializer.Meta.fields + ('nickname', 'image')
+
 
 class GenreSerializer(serializers.ModelSerializer):
 
@@ -20,11 +28,12 @@ class DirectorSerializer(serializers.ModelSerializer):
         fields = ('name',)
 
 class ReviewSerializer(serializers.ModelSerializer):
+    user = CustomUserDetailsSerializer2(read_only=True)
 
     class Meta:
         model = MovieReview
         fields = ('id','content', 'vote', 'created_at','movies','user','block_users')
-        read_only_fields = ('movies','user','block_users')
+        read_only_fields = ('movies','block_users')
         
 
 # 이건 전체를 주는 serializer
