@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_list_or_404, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
-from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer, RSMovieSerializer, UpcomingMovieSerializer
+from .serializers import MovieListSerializer, MovieSerializer, ReviewSerializer, RSMovieSerializer, UpcomingMovieSerializer, GenreSerializer
 from .models import Movie, Genre, Actor , Genre_count, Actor_count, Director_count, MovieReview, UpcomingMovie
 from worldcups.models import Worldcup
 from django.contrib.auth import get_user_model
@@ -370,3 +370,8 @@ def upcoming(request):
         serializer = UpcomingMovieSerializer(upcomingmovies, many=True)
         return Response(serializer.data)
 
+@api_view(['GET'])
+def get_genre(request):
+    genres = get_list_or_404(Genre)
+    serializer = GenreSerializer(genres, many=True)
+    return Response(serializer.data)

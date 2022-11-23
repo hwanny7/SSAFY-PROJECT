@@ -20,6 +20,7 @@ export default new Vuex.Store({
     all_reviews : Array,
     recommend_movies : Array,
     upcoming_movies: Array,
+    genres : Array,
   },
   getters: {
     GET_LIKE_MOIVES: (state) => state.like_movies,
@@ -28,7 +29,8 @@ export default new Vuex.Store({
     GET_DETAIL_MOVIE: (state) => state.detail_movie,
     GET_ALL_REVIEWS: (state) => state.all_reviews,
     GET_REOCOMMEND_MOVIES : (state) => state.recommend_movies,
-    GET_UPCOMING_MOVIES : (state) => state.upcoming_movies
+    GET_UPCOMING_MOVIES : (state) => state.upcoming_movies,
+    GET_GENRES : (state) => state.genres
   },
   mutations: {
     LIKEMOVIES(state, movies) {
@@ -60,6 +62,10 @@ export default new Vuex.Store({
     },
     UPCOMINGMOVIE(state,movies) {
       state.upcoming_movies = movies
+    },
+    GENRES(state, genres){
+      
+      state.genres = genres
     }
   },
   actions: {
@@ -213,6 +219,19 @@ export default new Vuex.Store({
         })
         .catch(err => {
           console.log(err)
+        })
+    },
+    getGenre(context){
+      context
+      axios({
+        url: `${API_URL}/movies/get/genre/`,
+        method : 'get',
+      })
+        .then(res => {
+          context.commit('GENRES', res.data)
+        })
+        .catch(err => {
+          console.log(err.data)
         })
     }
   },

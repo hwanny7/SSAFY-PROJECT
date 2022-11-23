@@ -36,6 +36,7 @@ export default {
     created() {
         this.CreateCollection()
         this.$store.dispatch('getAllMovie')
+        this.$store.dispatch('getGenre')
     }
 }
 </script>

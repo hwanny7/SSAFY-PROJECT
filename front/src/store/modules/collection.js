@@ -65,7 +65,7 @@ const collection = {
           headers: authHead,
         })
           .then(res => {
-            console.log(res)
+            
             commit('CREATE_COLLECTION', res.data)
           })
     },

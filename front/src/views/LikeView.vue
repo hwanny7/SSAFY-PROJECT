@@ -4,7 +4,6 @@
 
     <!-- 좋아요, 싫어요, 좋아요 누르러 가기 -->
     <select class="form-select" aria-label="Default select example" v-model="likehate">
-      <option value="all">ALL</option>
       <option value="like">LIKE</option>
       <option value="hate">HATE</option>
     </select>
@@ -19,11 +18,6 @@
       :user-pk="user_pk"
        />
     </div>
-    <div v-show="likehate === 'all'">
-      <MovieList
-      :user-pk="user_pk"
-       />
-    </div>
 
   </div>
 </template>
@@ -31,18 +25,17 @@
 <script>
 import HateListView from '@/components/HateListView'
 import LikeListView from '@/components/LikeListView'
-import MovieList from '@/components/MovieList'
+
 
 export default {
     name: 'LikeView',
     components: {
       HateListView,
       LikeListView,
-      MovieList,
     },
     data () {
       return {
-        likehate: 'all',
+        likehate: 'like',
         user_pk : Number(this.$route.params.id)
       }
     },

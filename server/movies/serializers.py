@@ -5,7 +5,7 @@ class GenreSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Actor
-        fields = ('name',)
+        fields = ('name','id')
 
 class ActorSerializer(serializers.ModelSerializer):
 
@@ -29,10 +29,11 @@ class ReviewSerializer(serializers.ModelSerializer):
 
 # 이건 전체를 주는 serializer
 class MovieListSerializer(serializers.ModelSerializer):
+    genres = GenreSerializer(many=True)
 
     class Meta:
         model = Movie
-        fields = ('title', 'poster_path','id')
+        fields = ('title', 'poster_path','id','genres')
 
 # recommend, similar movie 포장할 serializer
 class RSMovieSerializer(serializers.ModelSerializer):

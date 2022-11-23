@@ -109,7 +109,7 @@ export default {
             }
           }
           movie.content = data
-          console.log(movie.content)
+          // console.log(movie.content)
           this.collection.movies.splice(index, 1, movie)
 
           // this.collection.movies.forEach(movie => {
