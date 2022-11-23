@@ -47,7 +47,7 @@
      v-for="movie in GET_LIKE_MOIVES"
     :key="movie.id">
     <div class="box-wrap"> 
-      <div class='box' style='width:300px; height:500px;'>
+      <div class='box mt-0 mp-0' style='width:400px; height:700px;'>
         <div class="img">
           <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
             type="button" data-bs-toggle="modal"
