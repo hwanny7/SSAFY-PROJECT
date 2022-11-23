@@ -39,18 +39,40 @@
       </div>
     </div>
 
-    <span 
-    v-for="movie in GET_LIKE_MOIVES"
+    <swiper
+    class="swiper"
+    :options="swiperOption" >
+
+    <swiper-slide
+     v-for="movie in GET_LIKE_MOIVES"
     :key="movie.id">
-      <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
-      style="width: 100px; height: 100px" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal_like"
-      @click="movieDetail(movie.id)"
-      >
-    </span>
+    <div class="box-wrap"> 
+      <div class='box' style='width:300px; height:500px;'>
+        <div class="img">
+          <img :src="'https://themoviedb.org/t/p/original'+movie.poster_path" alt="" 
+            type="button" data-bs-toggle="modal"
+            data-bs-target="#exampleModal_like"
+            class="rounded-4"
+            @click="movieDetail(movie.id)"
+            >
+        </div>
+      </div>
+    </div>
+    </swiper-slide>     
+    
+    <!-- <div
+        class="swiper-pagination"
+        slot="pagination"
+        >
+    </div> -->
+</swiper>
   </div>
 </template>
 
 <script>
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
+
 import {mapGetters} from 'vuex'
 import MovieReview from '@/components/MovieReview'
 import ReviewInput from '@/components/ReviewInput'
@@ -60,6 +82,8 @@ export default {
     components:{
       MovieReview, 
       ReviewInput,
+      Swiper,
+      SwiperSlide,
     },
 
     props: {
@@ -69,6 +93,19 @@ export default {
       return {
         like : true,
         hate : false,
+        swiperOption: { 
+        slidesPerView: 1, 
+        spaceBetween: 30, 
+        loop: true, 
+        pagination: { 
+            el: '.swiper-pagination', 
+            clickable: true 
+        }, 
+        navigation: { 
+            nextEl: '.swiper-button-next', 
+            prevEl: '.swiper-button-prev' 
+        },
+    },
       }
     },
     methods:{
@@ -102,6 +139,7 @@ export default {
       movieModal() {
       return this.GET_DETAIL_MOVIE
     },
+      
     },
     created() {
       const data1 = {userPk:this.$route.params.id, url:'like'}
@@ -111,5 +149,22 @@ export default {
 </script>
 
 <style>
+.box-wrap {
+  /* width: 100vw;
+  height: 100vh; */
+  display: flex;
+  justify-content: center;
+  align-items: center
+}
+.box {
+  position: relative;
+  /* width: 400px; height: 300px;
+  border: 7px solid #283593; */
+  box-shadow: 1px 1px 3px rgba(0,0,0,0.4)
+}
+.box img {
+  width: 100%;
+}
+
 
 </style>
