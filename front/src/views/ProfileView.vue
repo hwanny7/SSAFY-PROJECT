@@ -1,9 +1,7 @@
 <template>
   <div>
-    <!-- {{$route.params.id}} -->
     <h1>프로필</h1>
     <div>
-      <!-- <p>{{profile}}</p> -->
       <p>포인트: {{profile.point}}</p>
       <p>별명: {{profile.nickname}}</p>
       <img v-if="profile.point <= 1" src="@/assets/브론즈.png" alt="" style="height:50px; width:50px;">
@@ -25,7 +23,7 @@
         <div v-for="(follower, index) in profile.followers_info"
         :key="index"
         >
-          <div class="box">
+          <div class="boxx">
             <img :src="'http://127.0.0.1:8000' + follower.image" alt="" class="profile">
           </div>
         </div>
@@ -34,30 +32,28 @@
     <div v-if="user.pk == profile.pk">
       <router-link :to="{name : 'CollectionCreate'}">Create</router-link>
     </div>
-    <hr>
+
     <ProfileCollectionView
     v-for="(collection) in getMyCollections"
     :key="collection.id"
     :collection="collection"
     :profilePk="profile.pk"
     />
-    <hr>
-    <star-rating id=setstar :star-size="30" v-model="rating" :border-width="5" border-color="#d8d8d8" :rounded-corners="true" :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]"
-    ></star-rating>
+
+
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions} from 'vuex'
 import ProfileCollectionView from '@/components/Collection/ProfileCollectionView'
-import StarRating from 'vue-star-rating'
+
 
 
 export default {
     name: 'ProfileView',
     components: {
       ProfileCollectionView, 
-      StarRating,
     },
     data() {
       return {

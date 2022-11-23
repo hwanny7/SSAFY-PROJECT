@@ -9,14 +9,29 @@
         <h3 class="text-center">{{collection.title}} </h3> 
 
         <div class="d-flex flex-column align-items-center">
-          <div class ="d-flex flex-row justify-content-center flex-wrap">
-            <CollectionMovie
-            v-for="(movie) in collection.movies"
-            :key="movie.id"
-            :movie="movie"
-            :collection-id="collection.id"
-            />
-          </div>
+
+        <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
+          <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark">
+            <div class="box-wrap">
+              <div class="box">
+                <div class="img">
+                  <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt=""
+                  :data-bs-target="`#o${collection.id}${movie.id}`" data-bs-whatever="@getbootstrap"
+                  :class="{'glowing-border':movie.content}"
+                  data-bs-toggle="modal"
+                  class="rounded-4"
+                  >
+                </div>
+                <div class="info">
+                  <div><h3>{{movie.title}}</h3></div>
+                  <div><h5>{{movie.content}}</h5></div>
+                </div>
+              </div>
+            </div>
+          </swiper-slide>
+        </swiper>
+
+          
           <div class="d-flex">
             <div v-if="user.pk != collection.user">
               <button v-if="collection.like_users.includes(user.pk)" @click="likeCollection(collection.id, collection.user)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요 취소</button>
@@ -55,7 +70,6 @@
           </div>
         </div>
       </div>
-      <hr>
     </div>
 
     <div v-else-if="user.pk === profilePk"> 
@@ -67,14 +81,27 @@
           <h3 class="text-center">{{collection.title}} </h3> 
 
           <div class="d-flex flex-column align-items-center">
-            <div class ="d-flex flex-row justify-content-center flex-wrap">
-              <CollectionMovie
-              v-for="(movie) in collection.movies"
-              :key="movie.id"
-              :movie="movie"
-              :collection-id="collection.id"
-              />
-            </div>
+            <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
+              <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark">
+                <div class="box-wrap">
+                  <div class="box">
+                    <div class="img">
+                      <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt=""
+                      :data-bs-target="`#o${collection.id}${movie.id}`" data-bs-whatever="@getbootstrap"
+                      :class="{'glowing-border':movie.content}"
+                      data-bs-toggle="modal"
+                      class="rounded-4"
+                      >
+                    </div>
+                    <div class="info">
+                      <div><h3>{{movie.title}}</h3></div>
+                      <div><h5>{{movie.content}}</h5></div>
+                    </div>
+                  </div>
+                </div>
+              </swiper-slide>
+            </swiper>
+
             <div class="d-flex">
               <div v-if="user.pk != collection.user">
                 <button v-if="collection.like_users.includes(user.pk)" @click="likeCollection(collection.id, collection.user)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요 취소</button>
@@ -113,7 +140,6 @@
             </div>
           </div>
         </div>
-        <hr>
     </div>
   </div>
 
@@ -122,19 +148,41 @@
 
 <script>
 import CollectionComment from '@/components/Collection/CollectionComment'
-import CollectionMovie from '@/components/Collection/CollectionMovie'
+// import CollectionMovie from '@/components/Collection/CollectionMovie'
 import {mapGetters} from 'vuex'
+
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
 
 export default {
     name: 'ProfileCollectionView',
     data() {
       return {
-        content: ''
+        content: '',
+        swiperOption: { 
+        slidesPerView: 5, 
+        spaceBetween: 30, 
+        effect:'coverflow',
+        grabCursor:"true",
+        centeredSlides:"true",
+        coverflowEffect:{
+          rotate: 30,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        },
+        pagination:"true",
+        modules:"modules",
+        class:"mySwiper",
+      },
       }
     },
     components: {
         CollectionComment,
-        CollectionMovie,
+        // CollectionMovie,
+        Swiper,
+        SwiperSlide,
     },
     computed: {
       ...mapGetters('login', [

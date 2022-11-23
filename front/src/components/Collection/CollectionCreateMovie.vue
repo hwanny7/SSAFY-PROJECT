@@ -1,6 +1,6 @@
 <template>
   <div>
-      <div class="card rounded d-flex justify-content-center align-items-center m-2 radius" style="width: 12rem;">
+      <div class="card rounded d-flex justify-content-center align-items-center m-2 radius sample_image" style="width: 12rem;">
         <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" class="card-img-top" alt="..." data-bs-toggle="modal" :data-bs-target="`#x${movie.id}`" data-bs-whatever="@getbootstrap"
         style="height: 300px;">
       </div>

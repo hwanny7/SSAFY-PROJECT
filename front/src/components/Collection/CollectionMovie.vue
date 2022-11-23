@@ -1,20 +1,11 @@
 <template>
-  <div>
-    <div class="card rounded d-flex justify-content-center align-items-center m-2 radius">
-    <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap">
+  <div>ent-center alig
+    <div class="card rounded d-flex justify-contn-items-center m-2 radius sample_image">
+    <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap"
+    :class="{'glowing-border':movie.content}"
+    >
     </div>
 
-  <!-- <div class="box-wrap">
-    <div class="box">
-      <div class="img">
-        <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${collectionId}${movie.id}`" data-bs-whatever="@getbootstrap" alt="Hover Effect">
-      </div>
-      <div class="info">
-        <h3>Design</h3>
-        <p>일러스트를 이용한 디자인입니다.</p>
-      </div>
-    </div>
-  </div> -->
 
     <div class="modal fade text-dark" :id="'o'+collectionId+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
@@ -34,16 +25,39 @@
         </div>
       </div>
     </div>
-
   </div>
+
 </template>
 
 <script>
+// import { SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
 
 export default {
     name: 'CollectionMovie',
+    components: {
+      // SwiperSlide,
+    },
     data() {
       return {
+        swiperOption: { 
+          slidesPerView: 4, 
+          spaceBetween: 10, 
+          effect:'coverflow',
+          grabCursor:"true",
+          centeredSlides:"true",
+          // slidesPerView:'auto',
+          coverflowEffect:{
+            rotate: 50,
+            stretch: 0,
+            depth: 100,
+            modifier: 1,
+            slideShadows: true,
+          },
+          pagination:"true",
+          modules:"modules",
+          class:"mySwiper",
+        },
       }
     },
     props: {
@@ -56,58 +70,35 @@ export default {
 </script>
 
 <style>
-/* .existContent{
-  border-style: solid;
-  border-width: 5px;
-  border-color: mediumaquamarine;
-      :class="{'existContent':movie.content}"
-} */
-
-/* .box-wrap {
-  width: 100vw; ss
-  height: 100vh; ss
-  display: flex;
-  justify-content: center;
-  align-items: center
-}
-.box {
-  position: relative;
-  max-height: 100%;
-  max-width: 100%;
-  width: 100px; height: 150px; ss
-  border: 7px solid #283593; ss 
-  box-shadow: 1px 1px 3px rgba(0,0,0,0.4)
-}
-.box img {
-  max-height: 100%;
-  max-width: 100%;
-}
-
-.box .info {
-  color: #fff;
-  position: absolute; left: 0; bottom: 0;
-  background: rgba(0,0,0,0.5);
+.swiper {
   width: 100%;
-  padding: 15px;
-  box-sizing: border-box;
-  opacity: 0;
-  transition: opacity 0.35s ease-in-out;
+  height: 100%;
 }
-.box:hover .info {
-  opacity: 1;
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
 }
-.box .info h3 {
-  font-size: 24px;
-  padding-bottom: 0.4em;
-  overflow:hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-transform: uppercase;
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
-.box .info p {
-  font-size: 20px;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  text-transform: uppercase;
-} */
 </style>

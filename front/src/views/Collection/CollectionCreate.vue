@@ -56,6 +56,8 @@ export default {
             moviePick: [],
             search: '',
             open_public: false,
+            store_movies: [],
+
         }
     },
     name : "CollectionCreate",
@@ -71,7 +73,7 @@ export default {
             if (this.search === ''){
                 return 0
             } else {
-                const searchMovie = this.getMoviePick.filter( movie => {
+                const searchMovie = this.store_movies.filter( movie => {
                     return movie.title.split(' ').join('').includes(this.search.split(' ').join(''))
                     // 문자열 공백 제거를 위해 넣었음
                 })
@@ -136,6 +138,9 @@ export default {
           this.moviePick.splice(index, 1)
         }
     },
+    created() {
+      this.store_movies = this.getMoviePick
+    }
 }
 </script>
 

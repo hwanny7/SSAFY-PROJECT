@@ -7,16 +7,18 @@
       <div v-else>
         <router-link :to="{name : 'AllCollection' }">Collection</router-link> |
         <router-link :to="{name : 'ProfileView', params: { id: user?.pk } }">Profile</router-link> |
+        <router-link :to="{name : 'testView'}">test</router-link> |
         <button @click="logout">로그아웃</button>
       </div>
     </nav>
     <router-view/>
+
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-import _ from 'lodash'
+// import _ from 'lodash'  
 
 export default {
     computed: {
@@ -37,12 +39,12 @@ export default {
       ]),
     },
     created() {
-        this.CreateCollection()
-        const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
-        console.log(url)
-        this.backGround(url)
-        // document.getElementById('background').style.backgroundImage=url
-        // document.body.style.backgroundImage = 'url(' + this.getBackImg + ')'
+        // this.CreateCollection()
+        // const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
+        // console.log(url)
+        // this.backGround(url)
+        // document.body.style.backgroundImage = 'url(https://image.tmdb.org/t/p/original/iKIqdg57IPFChuZioKUAZnreH1W.jpg)'
+        // document.body.style.backgroundImage = 'url(' + url + ')'
     }
 }
 </script>
@@ -70,7 +72,7 @@ nav a.router-link-exact-active {
   color: #42b983;
 }
 
-.box {
+.boxx {
     width: 50px;
     height: 50px; 
 }
@@ -80,4 +82,40 @@ nav a.router-link-exact-active {
     border-radius: 30%;
     object-fit: cover;
 }
+.sample_image  img {
+	-webkit-transform:scale(1);
+	-moz-transform:scale(1);
+	-ms-transform:scale(1);	
+	-o-transform:scale(1);	
+	transform:scale(1);
+	-webkit-transition:.3s;
+	-moz-transition:.3s;
+	-ms-transition:.3s;
+	-o-transition:.3s;
+	transition:.3s;
+}
+.sample_image:hover img {
+	-webkit-transform:scale(1.2);
+	-moz-transform:scale(1.2);
+	-ms-transform:scale(1.2);	
+	-o-transform:scale(1.2);
+	transform:scale(1.2);
+}
+
+/* .glowing-border {
+    border: 3px solid #9ecaed;
+    border-radius: 7px;
+}
+
+.glowing-border:focus {
+    outline: none;
+    border-color: #9ecaed;
+    box-shadow: 0 0 10px #9ecaed;
+} */
 </style>
+
+
+
+
+
+
