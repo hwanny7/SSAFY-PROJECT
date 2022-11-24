@@ -108,8 +108,14 @@ export default new Vuex.Store({
             'userPk' : info.userPk,
             'url': 'hate',
           }
-          context.dispatch('getLikeMovie', info1)
-          context.dispatch('getLikeMovie', info2)
+
+          context.dispatch('getDetailMovie', info.moviePk)
+          if (info.url==='like'){
+            context.dispatch('getLikeMovie', info1)
+          } else{
+            context.dispatch('getLikeMovie', info2)
+          }
+
           res
         })
         .catch(err => {
@@ -176,13 +182,13 @@ export default new Vuex.Store({
         })
     },
     getRecommendMovie(context,headers){
-      context
       axios({
         url: `${API_URL}/movies/recommend/`,
         method : 'get',
         headers: headers,
       })
         .then (res => {
+          console.log('res.data',res.data)
           context.commit('RECOMMENDMOVIES', res.data)
         })
         .catch (err => {

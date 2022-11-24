@@ -34,7 +34,7 @@ export default {
     created() {
       this.$store.dispatch('getRecommendMovie',this.authHead)
       this.$store.dispatch('getUpcomingMovie')
-      const data1 = {userPk:this.$route.params.id, url:'like'}
+      const data1 = {userPk:this.user.pk, url:'like'}
       this.$store.dispatch('getLikeMovie', data1)
       const data2 = {userPk:this.user.pk, url:'hate'}
       this.$store.dispatch('getLikeMovie', data2)

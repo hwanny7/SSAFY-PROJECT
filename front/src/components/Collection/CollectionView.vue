@@ -29,7 +29,10 @@
           <div class="d-flex flex-column align-items-center">
             <h3 class="text-center">{{collection.title}}</h3> 
             <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
-              <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark">
+              <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark" >
+                <button v-show="false" data-bs-target="#exampleModal" 
+            type="button" id="cbtn"
+            data-bs-toggle="modal"></button>
                 <div class="box-wrap">
                   <div class="box">
                     <div class="img">
@@ -37,6 +40,7 @@
                       :data-bs-target="`#o${collection.id}${movie.id}`" data-bs-whatever="@getbootstrap"
                       data-bs-toggle="modal"
                       class="rounded-4"
+                      @dblclick="movieDetail(movie.id), cbtnclick()"
                       >
                     </div>
                     <div class="info">
@@ -136,6 +140,14 @@ export default {
         profilePk: Number,
     },
     methods: {
+      cbtnclick(){
+        const btn = document.querySelector('#cbtn')
+        btn.click()
+      },
+      movieDetail(movie_pk) {
+        this.$store.dispatch('getDetailMovie', movie_pk)
+        this.$store.dispatch('getReview', movie_pk)
+      },
       delCollection() {
         const payload = {"id":this.collection.id, "authHead" : this.authHead, "user_id" : this.user.pk}
         this.$store.dispatch('collection/DeleteCollection', payload)

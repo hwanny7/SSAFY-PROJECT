@@ -82,7 +82,7 @@ export default {
       ...mapGetters('login', ['user'])
     },
     created() {
-      const data1 = {userPk:this.$route.params.id, url:'like'}
+      const data1 = {userPk:this.user.pk, url:'like'}
       this.$store.dispatch('getLikeMovie', data1)
     },
     mounted() {

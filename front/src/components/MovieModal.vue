@@ -5,7 +5,6 @@
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
-              <!-- <h4>{{ movieModal }}</h4> -->
               <h1 class="modal-title fs-5" id="exampleModalLabel">제목 : {{ movieModal?.title }}</h1>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
@@ -48,11 +47,11 @@
             </div>
             <div class="modal-footer">
               <div>
-                <button type="button" class="btn btn-danger" v-if="FindHate" @click="postlikemovie(movieModal?.id, 'hate')">싫어요 취소</button>
+                <button type="button" class="btn btn-danger" v-if="hate" @click="postlikemovie(movieModal?.id, 'hate')">싫어요 취소</button>
                 <button type="button" class="btn btn-danger" v-else  @click="postlikemovie(movieModal?.id, 'hate')">싫어요</button>
               </div>
               <div>
-                <button type="button" class="btn btn-primary" v-if="FindLike" @click="postlikemovie(movieModal?.id, 'like')">좋아요 취소</button>
+                <button type="button" class="btn btn-primary" v-if="like" @click="postlikemovie(movieModal?.id, 'like')">좋아요 취소</button>
                 <button type="button" class="btn btn-primary" v-else @click="postlikemovie(movieModal?.id, 'like')">좋아요</button>
               </div>
             </div>
@@ -80,24 +79,12 @@ export default {
       movieModal() {
       return this.GET_DETAIL_MOVIE
     },
-    FindHate() {
-      let hate = false
-      this.GET_HATE_MOVIES.forEach(movie => {
-        if (movie.id === this.movieModal.id){
-          hate = true
-        }}
-      );
-      return hate
+    like(){
+      return this.movieModal.like_users.includes(this.user.pk)
     },
-    FindLike() {
-      let like = false
-      this.GET_LIKE_MOIVES.forEach(movie => {
-        if (movie.id === this?.movieModal.id){
-         like = true
-        }}
-      );
-      return like
-    },
+    hate(){
+      return this.movieModal.hate_users.includes(this.user.pk)
+    }
   },
   methods: {
     postlikemovie(movie_pk, url){

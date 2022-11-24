@@ -1,6 +1,7 @@
 <template>
   <div>
     <select class="form-select" aria-label="Default select example1" v-model="genre">
+      <option value="None">None</option>
       <option value="all">ALL</option>
       <option 
       v-for="genre in genres"
