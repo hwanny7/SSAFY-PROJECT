@@ -7,12 +7,13 @@ from django.core.validators import MinValueValidator
 
 #email 넣으면 대상 컴퓨터 연결 거부 뜸
 class User(AbstractUser):
-    nickname = models.CharField(max_length=100)
+    nickname = models.CharField(max_length=15)
     followings = models.ManyToManyField('self',symmetrical=False, related_name='followers')
     blockings = models.ManyToManyField('self',symmetrical=False)
     image = models.ImageField(blank=True)
     point = models.IntegerField(default= 0, validators=[MinValueValidator(0)])
     date_joined = models.DateTimeField(auto_now_add=True)
+    content = models.CharField(blank=True, max_length=100)
 
     def __str__(self):
         return self.username

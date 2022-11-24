@@ -7,6 +7,7 @@ class UserAdapter(DefaultAccountAdapter):
         user = super().save_user(request, user, form, False)
         data = form.cleaned_data
         user.nickname = data.get('nickname')
+        user.content = data.get('content')
         user.image = data.get('image')
         user.save()
 

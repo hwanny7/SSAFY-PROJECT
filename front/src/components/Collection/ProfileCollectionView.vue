@@ -1,12 +1,10 @@
 <template>
   <div>
-    <div v-if="!collection.open_public">
-      <h3 class="text-center">{{collection.title}} </h3> 
+    <div v-if="!collection.open_public | user.pk === profilePk">
       <div>
-
-        <div class="d-flex flex-column align-items-center">
-
-        <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
+        <div class="d-flex flex-column align-items-center border rounded-4 mb-3 border border-secondary">
+        <h3 class="text-center mt-2">{{collection.title}} </h3> 
+        <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 4 ? swiperOption = swiperOption : swiperOption['loop'] = true">
           <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark">
             <div class="box-wrap">
               <div class="box">
@@ -19,7 +17,7 @@
                   >
                 </div>
                 <div class="info">
-                  <div><h3>{{movie.title}}</h3></div>
+                  <!-- <div><h3>{{movie.title}}</h3></div> -->
                   <div><h5>{{movie.content}}</h5></div>
                 </div>
               </div>
@@ -27,7 +25,7 @@
           </swiper-slide>
         </swiper>
 
-      <div>
+      <div class="mb-2">
         <!-- <p>{{collection.like_count ? collection.like_count:''}}</p> -->
         <span class="hex-icon-heart" @click="likeCollection(collection.id, collection.user)">
           <svg class="mt-3">
@@ -75,77 +73,6 @@
         </div>
       </div>
     </div>
-
-<!--작성자가 방문했을 때-->
-    <div v-else-if="user.pk === profilePk"> 
-        <div>
-          <button  @click="delCollection">Delete</button>
-          <router-link :to="{name: 'CollectionRevise', params: {pk: collection.id}}">수정하기zzz</router-link>
-        </div>
-        <div>
-          <h3 class="text-center">{{collection.title}} </h3> 
-
-          <div class="d-flex flex-column align-items-center">
-            <swiper class="swiper" :options="swiperOption" v-if="collection.movies.length < 6 ? swiperOption = swiperOption : swiperOption['loop'] = true">
-              <swiper-slide v-for="(movie) in collection.movies" :key="movie.id" class="bg-dark">
-                <div class="box-wrap">
-                  <div class="box">
-                    <div class="img">
-                      <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt=""
-                      :data-bs-target="`#o${collection.id}${movie.id}`" data-bs-whatever="@getbootstrap"
-                      :class="{'glowing-border':movie.content}"
-                      data-bs-toggle="modal"
-                      class="rounded-4"
-                      >
-                    </div>
-                    <div class="info">
-                      <div><h3>{{movie.title}}</h3></div>
-                      <div><h5>{{movie.content}}</h5></div>
-                    </div>
-                  </div>
-                </div>
-              </swiper-slide>
-            </swiper>
-
-            <div class="d-flex">
-              <div v-if="user.pk != collection.user">
-                <button v-if="collection.like_users.includes(user.pk)" @click="likeCollection(collection.id, collection.user)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요 취소</button>
-                <button v-else @click="likeCollection(collection.id, collection.user)" class="btn btn-danger">{{collection.like_count ? collection.like_count:''}} 좋아요</button>
-              </div>
-              <button class="btn btn-info" data-bs-toggle="modal" :data-bs-target="`#o${collection.id}`" data-bs-whatever="@getbootstrap"
-              @click="getComment"
-              >댓글 보기</button>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="modal fade" :id="'o'+ collection.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h1 class="modal-title fs-5" id="exampleModalLabel">내용</h1>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                  <div class="mb-3">
-                    <CollectionComment
-                    v-for="(comment, index) in getComments[collection.id]"
-                    :key="`o-${index}`"
-                    :comment="comment"
-                    :collection-pk="collection.id"
-                    />
-                  </div>
-                  <textarea class="form-control" id="message-text" v-model="content"></textarea>
-              </div>
-                <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">나가기</button>
-                <button type="button" class="btn btn-primary" @click="createComment">댓글 작성</button>
-                </div>
-            </div>
-          </div>
-        </div>
-    </div>
   </div>
 
 
@@ -153,7 +80,6 @@
 
 <script>
 import CollectionComment from '@/components/Collection/CollectionComment'
-// import CollectionMovie from '@/components/Collection/CollectionMovie'
 import {mapGetters} from 'vuex'
 
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";

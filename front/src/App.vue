@@ -15,7 +15,9 @@
       <li>
         <router-link :to="{name : 'testView'}">test</router-link>
       </li>
-      <button @click="logout">로그아웃</button>
+      <li>
+        <a @click="logout">로그아웃</a>
+      </li>
       </span>
     </ul>
     </nav>
@@ -131,9 +133,6 @@ export default {
 
 /* nav bar */
 @import url(https://fonts.googleapis.com/css?family=Open+Sans);
-nav {
-  padding: 30px;
-}
 
 nav a.router-link-exact-active {
   color: #42b983;
@@ -143,7 +142,7 @@ nav {
   max-width: 960px;
   mask-image: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 25%, #ffffff 75%, rgba(255, 255, 255, 0) 100%);
   margin: 0 auto;
-  padding: 60px 0;
+  padding: 20px 0;
 }
 
 nav ul {
