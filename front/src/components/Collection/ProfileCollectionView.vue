@@ -10,9 +10,6 @@
               <div class="box">
                 <div class="img">
                   <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt=""
-                  :data-bs-target="`#o${collection.id}${movie.id}`" data-bs-whatever="@getbootstrap"
-                  :class="{'glowing-border':movie.content}"
-                  data-bs-toggle="modal"
                   class="rounded-4"
                   >
                 </div>
