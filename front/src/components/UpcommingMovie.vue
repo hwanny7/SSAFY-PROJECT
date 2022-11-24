@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h4>UpcomingMovie</h4>
+    <h4>Upcoming Movie</h4>
         <div class ="d-flex flex-row justify-content-center flex-wrap">
       <div class="card rounded d-flex justify-content-center align-items-center m-2 radius sample_image" style="width: 12rem;"
       v-for="mmovie in GET_UPCOMING_MOVIES.slice(0, 6)"

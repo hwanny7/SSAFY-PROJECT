@@ -19,9 +19,6 @@
         <router-link :to="{name : 'ProfileView', params: { id: user?.pk } }">Profile</router-link>
       </li>
       <li>
-        <router-link :to="{name : 'testView'}">test</router-link>
-      </li>
-      <li>
         <a @click="logout">로그아웃</a>
       </li>
       </span>

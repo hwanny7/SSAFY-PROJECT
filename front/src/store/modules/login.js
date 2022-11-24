@@ -33,7 +33,7 @@ const login = {
           commit('SAVE_TOKEN', token)
           dispatch('getUserInfo')
           alert('로그인 성공!')
-          router.push('/') // app 창으로 이동
+          router.push('/home') // app 창으로 이동
         })
         .catch(err => {
           alert('잘못 입력하셨습니다.', err) // json stringfy로 에러 출력하기

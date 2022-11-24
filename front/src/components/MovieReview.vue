@@ -9,19 +9,26 @@
       </div>
         
       <div id='here' v-else>
-        <div class="row">
-          <div class="col"></div>
-          <img :src="'http://127.0.0.1:8000' + review.user.image" alt="" style="width:100px; heigh:80px;" class="col-1 profile">
-          <span class="col-1 my-auto">{{ review?.user.nickname + ':'}} </span>
-          <span class="col-5 my-auto">{{ review?.content }}</span>
-          <star-rating id=setstar 
-          :star-size="30" :increment="0.5" v-model="review.vote" class="col-3"
-          :read-only="true"  :border-width="5" border-color="#d8d8d8" 
-          :rounded-corners="true" :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]">
-          </star-rating>
-          <button class="col-1 " @click="deleteReview(review.id)" v-if="user.pk === review.user.pk">X</button>
-          <button class="col-1" @click="blockReview(review.id)" v-if="user.pk != review.user.pk">차단</button>
-          <div class="col"></div>
+        
+        <div class="d-flex justify-content-between mt-3">
+          <div class="d-flex flex-row">
+            <div class="boxx">
+              <img :src="'http://127.0.0.1:8000' + review.user.image" alt=""  class="profile">
+            </div>
+            <div class="d-flex flex-column justify-content-center align-items-ceneter text-dark">
+              {{review?.user.nickname}}: {{review?.content}}
+            </div>
+          </div>
+
+          <div class="d-flex flex-row">
+            <star-rating id=setstar  class="mx-3"
+            :star-size="30" :increment="0.5" v-model="review.vote"
+            :read-only="true"  :border-width="5" border-color="#d8d8d8" 
+            :rounded-corners="true" :star-points="[23,2, 14,17, 0,19, 10,34, 7,50, 23,43, 38,50, 36,34, 46,19, 31,17]">
+            </star-rating>
+            <button class="btn btn-warning p-1" @click="deleteReview(review.id)" v-if="user.pk === review.user.pk">삭제</button>
+            <button class="btn btn-warning p-1" @click="blockReview(review.id)" v-if="user.pk != review.user.pk">삭제</button>
+          </div>
         </div>
       </div>
     </div>

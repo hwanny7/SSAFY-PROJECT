@@ -109,7 +109,7 @@ export default new Vuex.Store({
       })
         .then(res => {
           console.log(res)
-          context.commit('BACKDROP', _.sampleSize(res.data.backdrops, 3))
+          context.commit('BACKDROP', _.sampleSize([...res.data.backdrops, ...res.data.posters], 3))
         })
         .catch(err => {
           console.log(err)

@@ -35,7 +35,7 @@
             </div>
             <div class="content-right">
                 <div class="tag"><h6>{{ movieModal?.title }}</h6></div>
-                <p class="text-start mt-2">{{ movieModal.overview }}</p>
+                <p class="text-start mt-2">{{ movieModal.overview.slice(0, 450) }}</p>
                 <div class="mini-imgs">
                     <img class="mini-img" :src='"https://themoviedb.org/t/p/original/" + GET_BACKDROP[0].file_path' alt="Unsplash Image" @click="changeImg(1)">
                     <img class="mini-img" :src='"https://themoviedb.org/t/p/original/" + GET_BACKDROP[1].file_path' alt="Unsplash Image" @click="changeImg(2)">

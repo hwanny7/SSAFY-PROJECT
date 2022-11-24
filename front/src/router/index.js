@@ -6,7 +6,6 @@ import ProfileView from '@/views/ProfileView'
 import CollectionCreate from '@/views/Collection/CollectionCreate'
 import AllCollection from '@/views/Collection/AllCollection'
 import CollectionRevise from '@/views/Collection/CollectionRevise'
-import testView from '@/views/testView'
 import HomeView from '@/views/HomeView'
 import LikeView from '@/views/LikeView'
 
@@ -37,11 +36,6 @@ const routes = [
     path: '/allcollection',
     name: 'AllCollection',
     component: AllCollection,
-  },
-  {
-    path: '/testView',
-    name: 'testView',
-    component: testView,
   },
   {
     path: '/revise/:pk',
