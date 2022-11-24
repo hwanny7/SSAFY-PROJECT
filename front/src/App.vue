@@ -13,17 +13,23 @@
       </div>
     </nav>
     <router-view/>
+    <MovieModal />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import MovieModal from '@/components/MovieModal'
 
 export default {
+    components:{
+      MovieModal,
+    },
     computed: {
       ...mapGetters('login', [
         'user', 'isLogin'
-      ])
+      ]),
+      
     },
     methods: {
       ...mapActions('login', [
@@ -36,7 +42,6 @@ export default {
     created() {
         this.CreateCollection()
         this.$store.dispatch('getAllMovie')
-        this.$store.dispatch('getGenre')
     }
 }
 </script>

@@ -39,9 +39,7 @@ export default {
         user_pk : Number(this.$route.params.id)
       }
     },
-    beforeCreate() {
-    }
-    
+
     
 }
 </script>

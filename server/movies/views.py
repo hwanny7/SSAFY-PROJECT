@@ -18,7 +18,7 @@ User = get_user_model()
 @api_view(['GET', 'POST'])
 def select(request):
     if request.method == 'GET':
-        movies = get_list_or_404(Movie)
+        movies = Movie.objects.all()
         serializer = MovieListSerializer(movies, many=True)
         return Response(serializer.data)
 

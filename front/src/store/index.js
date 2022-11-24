@@ -64,7 +64,6 @@ export default new Vuex.Store({
       state.upcoming_movies = movies
     },
     GENRES(state, genres){
-      
       state.genres = genres
     }
   },
@@ -233,6 +232,16 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err.data)
         })
+    },
+    getAll(context, data){
+      context.dispatch('getRecommendMovie', data.authHead)
+      context.dispatch('getUpcomingMovie')
+      context.dispatch('getAllMovie')
+      context.dispatch('getGenre')
+      const data1 = {'userPk': data.userPk, url:'like'}
+      this.$store.dispatch('getLikeMovie', data1)
+      const data2 = {'userPk': data.userPk, url:'hate'}
+      this.$store.dispatch('getLikeMovie', data2)
     }
   },
   modules: {
