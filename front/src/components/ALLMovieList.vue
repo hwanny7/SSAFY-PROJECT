@@ -45,12 +45,12 @@ export default {
   methods: {
     beforeMovie() {
       if ((this.movieNum) > 1 ){
-        this.movieNum -= 15
+        this.movieNum -= 12
       }
     },
     afterMovie() {
-      if (this.movieNum+15 < this.GET_ALL_MOVIES.length){
-        this.movieNum += 15
+      if (this.movieNum+12 < this.GET_ALL_MOVIES.length){
+        this.movieNum += 12
       }
     },
     movieDetail(movie_pk) {
@@ -59,13 +59,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['GET_ALL_MOVIES', 'GET_GENRES']),
+    ...mapGetters('collection', ['getMoviePick',]),
+    ...mapGetters(['GET_GENRES']),
     ...mapGetters('login' ,['user','authHead']),
     movieModal() {
       return this.GET_DETAIL_MOVIE
     },
     genreMovie() {
-      return this.GET_ALL_MOVIES.filter(movie => {
+      return this.getMoviePick.filter(movie => {
         if (this.genre === 'all') {
           return true
         }
@@ -81,7 +82,7 @@ export default {
       })
     },
     movieSlice() {
-      return this.genreMovie.slice(this.movieNum, this.movieNum + 15)
+      return this.genreMovie.slice(this.movieNum, this.movieNum + 12)
     },
     genres() {
       return this.GET_GENRES

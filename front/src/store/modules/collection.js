@@ -9,12 +9,14 @@ const collection = {
     MoviePick: Array,
     allCollections: Array,
     comments: Object,
+    backImg: String,
   },
   getters: {
     getMyCollections: (state) => state.myCollections,
     getAllCollections: (state) => state.allCollections,
     getMoviePick: (state) => state.MoviePick,
-    getComments: (state) => state.comments
+    getComments: (state) => state.comments,
+    getBackImg: (state) => state.backImg,
   },
   mutations: {
     MY_COLLECTIONS(state, res) {
@@ -28,6 +30,9 @@ const collection = {
     },
     GET_COMMENTS(state, payload) {
       state.comments = {...state.comments, ...payload}
+    },
+    BACK_GROUND(state, url) {
+      state.backImg = url
     }
   },
   actions: {
@@ -65,7 +70,7 @@ const collection = {
           headers: authHead,
         })
           .then(res => {
-            
+            console.log(res)
             commit('CREATE_COLLECTION', res.data)
           })
     },
@@ -120,6 +125,37 @@ const collection = {
           dispatch('getComments', payload.collection_pk)
         })  
     },
+    backGround({commit}, URL) {
+      commit('BACK_GROUND', URL)
+    },
+    likeCol({dispatch}, payload) {
+      axios({
+        url: `${API_URL}/collects/like/`,
+        method: 'post',
+        headers: payload.headers,
+        data: {
+          collection_pk: payload.collection_pk
+        }
+      })
+        .then(res => {
+          console.log(res)
+          dispatch('AllCollections', payload.headers)
+        })  
+    },
+    likeColpro({dispatch}, payload) {
+      axios({
+        url: `${API_URL}/collects/like/`,
+        method: 'post',
+        headers: payload.headers,
+        data: {
+          collection_pk: payload.collection_pk
+        }
+      })
+        .then(res => {
+          console.log(res)
+          dispatch('myCollections', payload.id)
+        })  
+    }
   }
 }
 

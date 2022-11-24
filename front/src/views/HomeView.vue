@@ -34,7 +34,7 @@ export default {
     },
     created() {
       this.$store.dispatch('getRecommendMovie',this.authHead)
-      this.$store.dispatch('getUpcomingMovie')
+      
     }
 
 }

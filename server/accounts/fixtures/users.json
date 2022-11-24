@@ -1,0 +1,73 @@
+[
+{
+    "model": "accounts.user",
+    "pk": 1,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$zsp3AmUqkERFHSYHKzgCqk$rRXjHqgiz1fEbb0MS0Gt1neLtBmLnO2o+w3NiVrul/M=",
+        "last_login": "2022-11-21T02:16:55.777Z",
+        "is_superuser": false,
+        "username": "test",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "nickname": "성공한 페페",
+        "image": "페페짤.jpg",
+        "point": 0,
+        "date_joined": "2022-11-21T02:13:20.317Z",
+        "groups": [],
+        "user_permissions": [],
+        "followings": [],
+        "blockings": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 2,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$IqpLyDwjCSZrs60DXEUXiJ$ifD63auGzJEh1Kv/In8NnS5v0rINr2Do1qdx3MS84jA=",
+        "last_login": "2022-11-21T02:21:48.356Z",
+        "is_superuser": false,
+        "username": "test2",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "nickname": "루시",
+        "image": "루시.jpg",
+        "point": 0,
+        "date_joined": "2022-11-21T02:21:48.325Z",
+        "groups": [],
+        "user_permissions": [],
+        "followings": [
+            1
+        ],
+        "blockings": []
+    }
+},
+{
+    "model": "accounts.user",
+    "pk": 3,
+    "fields": {
+        "password": "pbkdf2_sha256$260000$a2vaPCKzbpQOssNQZWDDZV$E/jtYEvuJnCmVtUtg2JsYjchlXpVjcUUUi9Lpxip9qU=",
+        "last_login": "2022-11-21T08:11:27.336Z",
+        "is_superuser": false,
+        "username": "test100",
+        "first_name": "",
+        "last_name": "",
+        "email": "",
+        "is_staff": false,
+        "is_active": true,
+        "nickname": "ㅎㅇ",
+        "image": "페페짤_4Fkn7FA.jpg",
+        "point": 0,
+        "date_joined": "2022-11-21T08:11:27.309Z",
+        "groups": [],
+        "user_permissions": [],
+        "followings": [],
+        "blockings": []
+    }
+}
+]

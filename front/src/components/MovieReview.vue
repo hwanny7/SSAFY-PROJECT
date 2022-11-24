@@ -11,7 +11,7 @@
       <div id='here' v-else>
         <div class="row">
           <div class="col"></div>
-          <img :src="'http://127.0.0.1:8000' + review.user.image" alt="" style="width:100px; heigh:80px;" class="col-1">
+          <img :src="'http://127.0.0.1:8000' + review.user.image" alt="" style="width:100px; heigh:80px;" class="col-1 profile">
           <span class="col-1 my-auto">{{ review?.user.nickname + ':'}} </span>
           <span class="col-5 my-auto">{{ review?.content }}</span>
           <star-rating id=setstar 

@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>모든 컬렉션</h1>
     <CollectionView
     v-for="(collection, index) in getAllCollections"
     :key="index"

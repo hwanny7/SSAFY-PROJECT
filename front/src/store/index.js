@@ -15,7 +15,6 @@ export default new Vuex.Store({
   state: {
     like_movies : Array,
     hate_movies : Array,
-    all_movies : Array,
     detail_movie: Object,
     all_reviews : Array,
     recommend_movies : Array,
@@ -25,7 +24,6 @@ export default new Vuex.Store({
   getters: {
     GET_LIKE_MOIVES: (state) => state.like_movies,
     GET_HATE_MOVIES: (state) => state.hate_movies,
-    GET_ALL_MOVIES: (state) => state.all_movies,
     GET_DETAIL_MOVIE: (state) => state.detail_movie,
     GET_ALL_REVIEWS: (state) => state.all_reviews,
     GET_REOCOMMEND_MOVIES : (state) => state.recommend_movies,
@@ -48,9 +46,6 @@ export default new Vuex.Store({
       }
       
     },
-    ALLMOVIES(state, movies) {
-      state.all_movies = movies
-    },
     DETAILMOVIE(state, movie){
       state.detail_movie = movie
     },
@@ -61,6 +56,7 @@ export default new Vuex.Store({
       state.recommend_movies = movies
     },
     UPCOMINGMOVIE(state,movies) {
+      console.log(movies)
       state.upcoming_movies = movies
     },
     GENRES(state, genres){
@@ -83,19 +79,6 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
-    },
-    getAllMovie(context){
-      axios({
-        url: `${API_URL}/movies/select/`,
-        method: 'get',
-      })
-        .then(res => {
-          context.commit('ALLMOVIES', res.data)
-        })
-        .catch(err => {
-          console.log(err)
-        })
-
     },
     getDetailMovie(context,movie_pk){
       axios({

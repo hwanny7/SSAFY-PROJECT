@@ -56,15 +56,15 @@ export default {
             const movie = {...this.movie, ...{"content":this.content}}
             this.cnt += 1
             this.$emit('pick', movie)
-            
+            console.log('pick')
         },
         movieUpdate() {
-            
+            console.log('update')
             const movie = {...this.movie, ...{"content":this.content}}
             this.$emit('update', movie)
         },
         movieDelete() {
-          
+          console.log('del')
           this.$emit('del', this.movie.id)
           this.cnt = 0
           this.content = ''

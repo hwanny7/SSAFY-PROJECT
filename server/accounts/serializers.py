@@ -8,17 +8,19 @@ from .models import User
 
 class CustomRegisterSerializer(RegisterSerializer):
 
-    nickname = serializers.CharField(max_length=100)
+    nickname = serializers.CharField(max_length=15)
     followings = serializers.ModelSerializer(many=True, read_only=True)
     blockings = serializers.ModelSerializer(many=True, read_only=True)
-    image = serializers.ImageField(use_url=True)
+    image = serializers.ImageField(use_url=True, required=False)
     point = serializers.IntegerField(read_only=True) 
     date_joined = serializers.DateTimeField(read_only=True)
+    content = serializers.CharField(max_length=100, required=False)
 
 
     def get_cleaned_data(self):
         cleaned_data = super().get_cleaned_data()
         cleaned_data['nickname'] = self.validated_data.get('nickname', '')
+        cleaned_data['content'] = self.validated_data.get('content', '')
         cleaned_data['image'] = self.validated_data.get('image', '')
         cleaned_data['point'] = self.validated_data.get('point', '')
         cleaned_data['date_joined'] = self.validated_data.get('date_joined', '')
@@ -32,13 +34,13 @@ class CustomUserDetailsSerializer(UserDetailsSerializer): # dj_rest_auth.urls/us
 
         class Meta:
             model = User
-            fields = ('nickname', 'image', 'id')
+            fields = ('nickname', 'image', 'id', 'content')
     
     followers_count = serializers.IntegerField(source='followers.count')
     followers_info = followerSerializer(source="followers", many=True)
 
     class Meta(UserDetailsSerializer.Meta):
-        fields = UserDetailsSerializer.Meta.fields + ('nickname', 'image', 'point', 'date_joined', 'followings', 'followers', 'followers_info', 'followers_count')
+        fields = UserDetailsSerializer.Meta.fields + ('nickname', 'image', 'point', 'date_joined', 'followings', 'followers', 'followers_info', 'followers_count', 'content')
 
 
 # REST_AUTH_SERIALIZERS = {

@@ -1,60 +1,80 @@
 <template>
-  <div>
-    <!-- {{$route.params.id}} -->
-    <h1>프로필</h1>
-    <div>
-      <!-- <p>{{profile}}</p> -->
-      <p>별명: {{profile.nickname}}</p>
-      <img :src="'http://127.0.0.1:8000' + profile.image" alt="" style="width:100px; heigh:80px;"> <!--user가 로그인 했을 경우에만-->
-      <div v-if="profile.pk != user.pk">
-        <div v-if="profile.followers.includes(user.pk)">
-          <button @click="fixFollower(profile.pk)">언팔로우</button>
-        </div>
-        <div v-else>
-          <button @click="fixFollower(profile.pk)">팔로우</button>
-        </div>
-      </div>
-      <p>가입일: {{profile.date_joined.slice(0, 10)}}</p>
-      <p>팔로워: {{profile.followers_count}}명</p>
-      <div class="d-flex justify-content-center">
-        <div v-for="(follower, index) in profile.followers_info"
-        :key="index"
-        >
-          <div class="box">
-            <img :src="'http://127.0.0.1:8000' + follower.image" alt="" class="profile">
+  <div class="container">
+    <div class="row">
+      <div class="d-flex flex-column align-items-center mb-5 col-3">
+        <div class="card bg-dark rounded-3" style="width: 18rem;">
+          <img :src="'http://127.0.0.1:8000' + profile.image" class="card-img-top" alt="">
+          <div class="card-body">
+            <h5 class="card-title">{{profile.nickname}}</h5>
+            <p>가입일: {{profile.date_joined.slice(0, 10)}}</p>
+            <p>팔로워: {{profile.followers_count}}명</p>
+            <p class="card-text">{{profile.content}}</p>
+            <button class="btn btn-primary" 
+            v-if="profile.pk != user.pk" @click="fixFollower(profile.pk)"
+            >{{profile.followers.includes(user.pk) ? "Unfollow" : "follow"}}</button>
+            <button class="btn btn-primary" v-if="profile.pk == user.pk">
+              <router-link :to="{name : 'CollectionCreate'}" style ="text-decoration: none;" class="text-white">Create</router-link></button>
+          </div>
+          <div class="d-flex justify-content-center mb-2">
+            <div v-for="(follower, index) in profile.followers_info"
+            :key="index"
+            >
+              <div class="boxx ms-2 sample_image">
+                <router-link :to="{name: 'ProfileView', params: {id: follower.id}}">
+                  <img :src="'http://127.0.0.1:8000' + follower.image" alt="" class="profile">
+                </router-link>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <p>포인트: {{profile.point}}</p>
+
+      <div class="col-9">
+        <ProfileCollectionView
+        v-for="(collection) in getMyCollections"
+        :key="collection.id"
+        :collection="collection"
+        :profilePk="profile.pk"
+        />
+      </div>
+
     </div>
-    <div v-if="user.pk == profile.pk">
-      <router-link :to="{name : 'CollectionCreate'}">Create</router-link>
-    </div>
-    <hr>
-    <CollectionView
-    v-for="(collection) in getMyCollections"
-    :key="collection.id"
-    :collection="collection"
-    :profilePk="profile.pk"
-    />
-    <hr>
+
+
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions} from 'vuex'
-import CollectionView from '@/components/Collection/CollectionView'
+import ProfileCollectionView from '@/components/Collection/ProfileCollectionView'
 
 
 
 export default {
     name: 'ProfileView',
     components: {
-      CollectionView, 
+      ProfileCollectionView,
     },
     data() {
       return {
-        id: this.$route.params.id
+        id: this.$route.params.id,
+        swiperOption: { 
+        slidesPerView: 5, 
+        spaceBetween: 30, 
+        effect:'coverflow',
+        grabCursor:"true",
+        centeredSlides:"true",
+        coverflowEffect:{
+          rotate: 30,
+          stretch: 0,
+          depth: 100,
+          modifier: 1,
+          slideShadows: true,
+        },
+        pagination:"true",
+        modules:"modules",
+        class:"mySwiper",
+      },
       }
     },
     computed: {

@@ -1,10 +1,11 @@
 <template>
   <div>
-    <div>
-    <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="width:80px; height:80px;" data-bs-toggle="modal" :data-bs-target="`#o${movie.id}`" data-bs-whatever="@getbootstrap"
-    :class="{'existContent':movie.content}"
-    >
+    <div class="card rounded d-flex justify-content-center align-items-center m-2 radius sample_image">
+      <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt="" style="height:150px;" data-bs-toggle="modal" :data-bs-target="`#o${movie.id}`" data-bs-whatever="@getbootstrap"
+      :class="{'glowing-border':movie.content}"
+      >
     </div>
+
     <div class="modal fade" :id="'o'+movie.id" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
@@ -54,11 +55,6 @@ export default {
 </script>
 
 <style>
-.existContent{
-  border-style: solid;
-  border-width: 5px;
-  border-color: mediumaquamarine;
-}
 
 
 </style>

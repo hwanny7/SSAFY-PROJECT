@@ -1,13 +1,14 @@
 <template>
-  <div class="d-flex">
-    <!-- <p>{{comment.user.}}</p> -->
-    <div class="box">
-    <img :src="'http://127.0.0.1:8000' + comment.user.image" alt="" class="profile">
+  <div class="d-flex flex-row">
+    <div class="boxx">
+      <img :src="'http://127.0.0.1:8000' + comment.user.image" alt="" class="profile">
     </div>
-    <p>{{comment.user.nickname}}: {{comment.content}}</p>
-    <button v-if="user.pk === comment.user.id"
-    @click="commentDelete"
-    >delete</button>
+    <div class="d-flex flex-column justify-content-center align-items-ceneter text-dark">
+      {{comment.user.nickname}}: {{comment.content}}
+    </div>
+    <div v-if="user.pk === comment.user.id" class="d-flex flex-row align-items-center">
+      <button class="btn btn-warning p-1" @click="commentDelete">delete</button>
+    </div>
   </div>
 </template>
 
