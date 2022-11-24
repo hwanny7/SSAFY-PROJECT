@@ -31,7 +31,7 @@
     <section class="main-card">
         <div class="card-content">
             <div class="content-left">
-                <img class="full-img" src="https://images.unsplash.com/photo-1592431454781-ec4870757ce9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80" alt="Unsplash Image">
+                <img class="full-img" :src='"https://themoviedb.org/t/p/original/" + GET_BACKDROP[0].file_path' alt="Unsplash Image">
             </div>
             <div class="content-right">
                 <div class="tag"><h6>{{ movieModal?.title }}</h6></div>
