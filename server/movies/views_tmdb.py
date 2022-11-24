@@ -77,18 +77,38 @@ def get_actors(movie):
 
 def movie_data(page=1):
     response = requests.get(
-        POPULAR_MOVIE_URL,
+        UPCOMING_MOVIE_URL,
         params={
             'api_key': API_KEY,
-            'language': 'ko-kr',     
+            'language': 'ko-KR',
             'page': page,       
         }
     ).json()
+    # response = requests.get(
+    #     POPULAR_MOVIE_URL,
+    #     params={
+    #         'api_key': API_KEY,
+    #         'language': 'ko-kr',     
+    #         'page': page,       
+    #     }
+    # ).json()
 
     for movie_dict in response.get('results'):
         if not movie_dict.get('release_date'): continue   # 없는 필드 skip
+        if not movie_dict.get('poster_path'): continue
+        if movie_dict.get('original_language') not in ['ko', 'en']: continue
+
+        release_date = movie_dict.get('release_date')
+        year = int(release_date[0:4])
+        month = int(release_date[5:7])
+        day = int(release_date[8:10])
+        now = datetime.now()
+
+        if (year < now.year) or (month < now.month) or (day < now.day): continue
         # 유투브 key 조회
         youtube_key = get_youtube_key(movie_dict)
+        if youtube_key == 'nothing':
+            continue
         if Movie.objects.filter(pk=movie_dict.get('id')).exists(): continue
         movie = Movie.objects.create(
             adult = movie_dict.get('adult'),
@@ -202,13 +222,13 @@ def get_recommend_movie(request):
     return HttpResponse('OK!!!!!!!!!!!!!!')
 
 def get_movie(request):
-    Genre.objects.all().delete()
-    Actor.objects.all().delete()
-    Movie.objects.all().delete()
-    Director.objects.all().delete()
+    # Genre.objects.all().delete()
+    # Actor.objects.all().delete()
+    # Movie.objects.all().delete()
+    # Director.objects.all().delete()
 
     tmdb_genres()
-    for i in range(1, 60):
+    for i in range(1, 30):
         movie_data(i)
     
     return HttpResponse('OK >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>')

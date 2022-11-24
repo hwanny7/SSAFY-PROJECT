@@ -47,7 +47,8 @@
 
                 </div>
               </div>
-              
+
+            <div v-show="movieModal">
               <div class="my-5">
               <h4>Review</h4>
               </div>
@@ -62,6 +63,9 @@
                 />
               </div>
             </div>
+          </div>
+
+
             <div class="modal-footer">
               <div>
                 <button type="button" class="btn btn-danger" v-if="hate" @click="postlikemovie(movieModal?.id, 'hate')">싫어요 취소</button>

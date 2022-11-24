@@ -6,9 +6,10 @@
       v-for="mmovie in GET_UPCOMING_MOVIES.slice(0, 6)"
       :key="mmovie.id">
         <img :src="'https://themoviedb.org/t/p/original'+mmovie.poster_path" alt="" 
-        type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="card-img-top" style="height: 300px;"
-        @click="movieDetail(mmovie.id)"
+        type="button"  class="card-img-top" style="height: 300px;"
+        @dblclick="movieDetail(mmovie.id), clickbtn()"
         >
+        <button v-show="false" id="ubtn" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
       </div>
     </div>
   </div>
@@ -24,6 +25,16 @@ export default {
     
       recommend_movies () {
         return this.GET_UPCOMING_MOVIES
+      }
+  },
+  methods:{
+    movieDetail(movie_pk) {
+        this.$store.dispatch('getDetailMovie', movie_pk)
+        this.$store.dispatch('getReview', movie_pk)
+      },
+      clickbtn(){
+        const btnTag = document.querySelector('#ubtn')
+        btnTag.click()
       }
   }
 

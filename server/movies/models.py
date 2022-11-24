@@ -51,16 +51,6 @@ class Movie(models.Model):
     recommendmovie = models.ManyToManyField('self', symmetrical=False, related_name='movierecommend')
     similarmovie = models.ManyToManyField('self', symmetrical=False, related_name='moviesimilar')
 
-class UpcomingMovie(models.Model):
-    updated_at = models.DateTimeField(auto_now_add=True)
-    title = models.CharField(max_length=100)
-    overview = models.TextField()
-    release_date = models.DateTimeField()
-    poster_path = models.CharField(max_length=200)
-    genres = models.ManyToManyField(Genre)
-    youtube_key = models.CharField(max_length=100)
-    actors = models.ManyToManyField(Actor)
-    directors = models.ManyToManyField(Director)
 
 class MovieReview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
@@ -71,3 +61,15 @@ class MovieReview(models.Model):
     banned = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+class UpcomingMovie(models.Model):
+    updated_at = models.DateTimeField(auto_now_add=True)
+    title = models.CharField(max_length=100)
+    overview = models.TextField()
+    release_date = models.DateTimeField()
+    poster_path = models.CharField(max_length=200)
+    genres = models.ManyToManyField(Genre)
+    youtube_key = models.CharField(max_length=100)
+    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director)
+    

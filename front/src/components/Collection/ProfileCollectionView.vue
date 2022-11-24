@@ -11,7 +11,9 @@
                 <div class="img">
                   <img :src="'https://image.tmdb.org/t/p/original' + movie.poster_path" alt=""
                   class="rounded-4"
+                  @dblclick="movieDetail(movie.id), clickbtn()"
                   >
+                  <button v-show="false" id="pbtn" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
                 </div>
                 <div class="info">
                   <!-- <div><h3>{{movie.title}}</h3></div> -->
@@ -127,6 +129,14 @@ export default {
         profilePk: Number,
     },
     methods: {
+      movieDetail(movie_pk) {
+        this.$store.dispatch('getDetailMovie', movie_pk)
+        this.$store.dispatch('getReview', movie_pk)
+      },
+      clickbtn(){
+        const btnTag = document.querySelector('#pbtn')
+        btnTag.click()
+      },
       delCollection() {
         const payload = {"id":this.collection.id, "authHead" : this.authHead, "user_id" : this.user.pk}
         this.$store.dispatch('collection/DeleteCollection', payload)
