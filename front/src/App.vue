@@ -7,6 +7,12 @@
       </li>
       <span v-else>
       <li>
+        <router-link :to="{name : 'Home' }">Home</router-link>
+      </li>
+      <li>
+        <router-link :to="{name : 'Like', params: { id: user?.pk } }">Like</router-link>
+      </li>
+      <li>
         <router-link :to="{name : 'AllCollection' }">Collection</router-link>
       </li>
       <li>
@@ -22,15 +28,19 @@
     </ul>
     </nav>
     <router-view/>
-
+    <MovieModal />
   </div>
 </template>
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
+import MovieModal from '@/components/MovieModal'
 // import _ from 'lodash'  
 
 export default {
+    components:{
+      MovieModal,
+    },
     computed: {
       ...mapGetters('login', [
         'user', 'isLogin'
@@ -50,6 +60,7 @@ export default {
     },
     created() {
         this.CreateCollection()
+        this.$store.dispatch('getAllMovie')
         // const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
         // console.log(url)
         // this.backGround(url)

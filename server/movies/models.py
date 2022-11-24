@@ -59,12 +59,14 @@ class UpcomingMovie(models.Model):
     poster_path = models.CharField(max_length=200)
     genres = models.ManyToManyField(Genre)
     youtube_key = models.CharField(max_length=100)
+    actors = models.ManyToManyField(Actor)
+    directors = models.ManyToManyField(Director)
 
 class MovieReview(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     movies = models.ForeignKey(Movie, on_delete=models.CASCADE)
     content = models.TextField()
-    vote = models.IntegerField()
+    vote = models.FloatField()
     block_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name='block_reviews')
     banned = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
