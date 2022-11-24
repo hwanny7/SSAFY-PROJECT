@@ -10,6 +10,7 @@ const API_URL = 'http://127.0.0.1:8000'
 
 Vue.use(Vuex)
 import axios from 'axios'
+import _ from 'lodash'
 
 export default new Vuex.Store({
   state: {
@@ -20,6 +21,7 @@ export default new Vuex.Store({
     recommend_movies : Array,
     upcoming_movies: Array,
     genres : Array,
+    backdrop: Array,
   },
   getters: {
     GET_LIKE_MOIVES: (state) => state.like_movies,
@@ -28,7 +30,8 @@ export default new Vuex.Store({
     GET_ALL_REVIEWS: (state) => state.all_reviews,
     GET_REOCOMMEND_MOVIES : (state) => state.recommend_movies,
     GET_UPCOMING_MOVIES : (state) => state.upcoming_movies,
-    GET_GENRES : (state) => state.genres
+    GET_GENRES : (state) => state.genres,
+    GET_BACKDROP : (state) => state.backdrop
   },
   mutations: {
     LIKEMOVIES(state, movies) {
@@ -60,6 +63,9 @@ export default new Vuex.Store({
     },
     GENRES(state, genres){
       state.genres = genres
+    },
+    BACKDROP(state, url) {
+      state.backdrop = url
     }
   },
   actions: {
@@ -79,7 +85,11 @@ export default new Vuex.Store({
           console.log(err)
         })
     },
+
+
+
     getDetailMovie(context,movie_pk){
+      console.log(movie_pk)
       axios({
         url: `${API_URL}/movies/${movie_pk}/moviedetail/`,
         method: 'get',
@@ -90,7 +100,25 @@ export default new Vuex.Store({
         .catch(err => {
           console.log(err)
         })
+      axios({
+        url: `https://api.themoviedb.org/3/movie/${movie_pk}/images`,
+        method: 'get',
+        params: {
+          'api_key' : '4e117d07b2367287ebca5cffeff8a553',
+        }
+      })
+        .then(res => {
+          console.log(res)
+          context.commit('BACKDROP', _.sampleSize(res.data.posters, 3))
+        })
+        .catch(err => {
+          console.log(err)
+        })
     },
+
+
+
+
     postLikeMovie(context, info){
       axios({
         url: `${API_URL}/movies/${info.userPk}/${info.url}/`,

@@ -63,11 +63,11 @@ export default {
         this.$store.dispatch('getGenre')
         this.$store.dispatch('getUpcomingMovie')
         
-        // const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
-        // console.log(url)
-        // this.backGround(url)
-        // document.body.style.backgroundImage = 'url(https://image.tmdb.org/t/p/original/iKIqdg57IPFChuZioKUAZnreH1W.jpg)'
-        // document.body.style.backgroundImage = 'url(' + url + ')'
+//         const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
+//         console.log(url)
+//         this.backGround(url)
+//         document.body.style.backgroundImage = 'url(https://image.tmdb.org/t/p/original/iKIqdg57IPFChuZioKUAZnreH1W.jpg)'
+//         document.body.style.backgroundImage = 'url(' + url + ')'
 
 // var bg = document.getElementById("bg");
 

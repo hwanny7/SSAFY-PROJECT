@@ -9,9 +9,9 @@
       :value="genre.id">{{ genre.name }}</option>
     </select>
 
-    <div>
-      <button @click="beforeMovie">-</button>
-      <button @click="afterMovie">+</button>
+    <div class="mt-3">
+      <button class="btn btn-secondary mx-1" @click="beforeMovie">이전 페이지</button>
+      <button class="btn btn-secondary mx-1" @click="afterMovie">다음 페이지</button>
     </div>
 
     <div class ="d-flex flex-row justify-content-center flex-wrap">
@@ -50,7 +50,7 @@ export default {
       }
     },
     afterMovie() {
-      if (this.movieNum+12 < this.GET_ALL_MOVIES.length){
+      if (this.movieNum+12 < this.genreMovie.length){
         this.movieNum += 12
       }
     },

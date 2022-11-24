@@ -3,7 +3,9 @@
     <ALLMovieList
     :user-pk="user.pk"
     />
-    <UpcommingMovie />
+    <div class="mt-3">
+      <UpcommingMovie />
+    </div>
     <RecommendMovie />
   </div>
 </template>

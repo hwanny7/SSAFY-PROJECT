@@ -1,8 +1,8 @@
 <template>
-  <div class="mt-5">
+  <div class="my-5">
     <h4>Recommend Movie</h4>
     <div>
-    <button @click='renew()'>추천영화 새로 고침</button>
+    <button class="btn btn-secondary" @click='renew()'>추천영화 새로 고침</button>
     </div>
     
     <div v-if="GET_LIKE_MOIVES.length >= 3">
@@ -14,7 +14,7 @@
             class="card-img-top" style="height: 300px;"
           @dblclick="movieDetail(rmovie.id), btclick()"
           >
-          <button id="rbtn" v-show="true" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
+          <button id="rbtn" v-show="false" data-bs-toggle="modal" data-bs-target="#exampleModal"></button>
         </div>
       </div>
     </div>
