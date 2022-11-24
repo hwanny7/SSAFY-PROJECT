@@ -1,7 +1,7 @@
 <template>
   <div id='moviemodal'>
     <div d-flex flex-column mb-3>
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade text-dark" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-xl modal-dialog-scrollable">
           <div class="modal-content">
             <div class="modal-header">
@@ -11,22 +11,22 @@
             </div>
             <div class="modal-body">
               <div v-if="movieModal?.poster_path">
-                <div class="row" style='height:300px'>
-                  <div class="col">
-                      <iframe :src="'https://www.youtube.com/embed/'+ `${movieModal.youtube_key}`" frameborder="1" style="width:100%; height:100%"></iframe>
+                <div class="d-flex flex-column">
+                  <div>
+                      <iframe :src="'https://www.youtube.com/embed/'+ `${movieModal.youtube_key}`" frameborder="1" style="width:50%; height:50vh"></iframe>
                   </div>
-                  <div class="col">
-                    <span>{{ movieModal.overview }}</span>
+                  <div class="text-start">
+                    <p>{{ movieModal.overview }}</p>
                     <div v-if="movieModal.directors.length>=1">
                       <h4>감독</h4>
-                      <span v-for="director in movieModal.directors" :key="director.name">{{ director.name }},</span>
+                      <div v-for="director in movieModal.directors" :key="director.name"><p>{{ director.name }},</p></div>
                     </div>
                     <div v-if="movieModal.actors.length>=1">
                       <h4>배우</h4>
-                      <span v-for="actor in movieModal.actors" :key="actor.name">{{ actor.name }},</span>
+                      <p v-for="actor in movieModal.actors" :key="actor.name">{{ actor.name }},</p>
                     </div>
                     <h4>장르</h4>
-                    <span v-for="genre in movieModal?.genres" :key="genre.id" >{{ genre.name+" " }}</span>
+                    <p v-for="genre in movieModal?.genres" :key="genre.id" >{{ genre.name+" " }}</p>
                   </div>
 
                 </div>

@@ -13,7 +13,7 @@ urlpatterns = [
     path('recommend/', views.recommend),
     path('upcoming/', views.upcoming),
     path('get/genre/', views.get_genre),
-    # path('get/upcoming/', views_tmdb.get_upcoming_movie),
+    path('get/upcoming/', views_tmdb.get_upcoming_movie),
     # path('get/recommend/', views_tmdb.get_recommend_movie),
     # path('get/similar/', views_tmdb.get_similar_movie),
     # path('collection/', views.make_collection, name='collection'),

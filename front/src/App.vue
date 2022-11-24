@@ -60,7 +60,9 @@ export default {
     },
     created() {
         this.CreateCollection()
-        this.$store.dispatch('getAllMovie')
+        this.$store.dispatch('getGenre')
+        this.$store.dispatch('getUpcomingMovie')
+        
         // const url = 'https://image.tmdb.org/t/p/original' + _.sample(this.getMoviePick).poster_path
         // console.log(url)
         // this.backGround(url)

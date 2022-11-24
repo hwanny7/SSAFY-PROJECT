@@ -14,7 +14,7 @@ const collection = {
   getters: {
     getMyCollections: (state) => state.myCollections,
     getAllCollections: (state) => state.allCollections,
-    getMoviePick: (state) => state.MoviePick,
+    getMoviePick: (state) => state.MoviePick, 
     getComments: (state) => state.comments,
     getBackImg: (state) => state.backImg,
   },

@@ -347,12 +347,10 @@ def recommend(request):
         for smovie in similar_movies:
             if Candidate.get(movie.id, 0):
                 del(Candidate[movie.id])
-    print('사이1')        
     print(list(Candidate.items()))
-    print('사이2')
     movie_list = sorted(Candidate.items(), key=lambda x: x[1][0],reverse=True)
     if len(movie_list) > 20:
-        movie_list = movie_list[:20]
+        movie_list = movie_list[:12]
     res = []
     for info in movie_list:
         res.append(Movie.objects.get(pk=info[0]))

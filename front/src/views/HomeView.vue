@@ -1,9 +1,8 @@
 <template>
   <div>
-    <h1>HomeView</h1>
-      <ALLMovieList
-      :user-pk="user.pk"
-      />
+    <ALLMovieList
+    :user-pk="user.pk"
+    />
     <UpcommingMovie />
     <RecommendMovie />
   </div>
@@ -35,6 +34,11 @@ export default {
     created() {
       this.$store.dispatch('getRecommendMovie',this.authHead)
       this.$store.dispatch('getUpcomingMovie')
+      const data1 = {userPk:this.$route.params.id, url:'like'}
+      this.$store.dispatch('getLikeMovie', data1)
+      const data2 = {userPk:this.user.pk, url:'hate'}
+      this.$store.dispatch('getLikeMovie', data2)
+      
     }
 
 }

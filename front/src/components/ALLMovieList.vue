@@ -1,7 +1,5 @@
 <template>
   <div>
-    <!-- {{ GET_ALL_MOVIES }} -->
-    <h1>MovieList</h1>
     <select class="form-select" aria-label="Default select example1" v-model="genre">
       <option value="all">ALL</option>
       <option 
@@ -15,14 +13,16 @@
       <button @click="afterMovie">+</button>
     </div>
 
-    <span 
-    v-for="mmovie in movieSlice"
-    :key="mmovie.id">
-      <img :src="'https://themoviedb.org/t/p/original'+mmovie.poster_path" alt="" 
-      style="width: 100px; height: 100px" type="button" data-bs-toggle="modal" data-bs-target="#exampleModal"
-      @click="movieDetail(mmovie.id)"
-      >
-    </span>
+    <div class ="d-flex flex-row justify-content-center flex-wrap">
+      <div class="card rounded d-flex justify-content-center align-items-center m-2 radius sample_image" style="width: 12rem;"
+      v-for="mmovie in movieSlice"
+      :key="mmovie.id">
+        <img :src="'https://themoviedb.org/t/p/original'+mmovie.poster_path" alt="" 
+        type="button" data-bs-toggle="modal" data-bs-target="#exampleModal" class="card-img-top" style="height: 300px;"
+        @click="movieDetail(mmovie.id)"
+        >
+      </div>
+    </div>
   </div>
 </template>
 
@@ -38,19 +38,19 @@ export default {
   },
   data() {
     return {
-      genre: 'all',
+      genre: 'None',
       movieNum: 0,
     }
   },
   methods: {
     beforeMovie() {
       if ((this.movieNum) > 1 ){
-        this.movieNum -= 15
+        this.movieNum -= 12
       }
     },
     afterMovie() {
-      if (this.movieNum+15 < this.GET_ALL_MOVIES.length){
-        this.movieNum += 15
+      if (this.movieNum+12 < this.GET_ALL_MOVIES.length){
+        this.movieNum += 12
       }
     },
     movieDetail(movie_pk) {
@@ -59,13 +59,14 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['GET_ALL_MOVIES', 'GET_GENRES']),
+    ...mapGetters('collection', ['getMoviePick',]),
+    ...mapGetters(['GET_GENRES']),
     ...mapGetters('login' ,['user','authHead']),
     movieModal() {
       return this.GET_DETAIL_MOVIE
     },
     genreMovie() {
-      return this.GET_ALL_MOVIES.filter(movie => {
+      return this.getMoviePick.filter(movie => {
         if (this.genre === 'all') {
           return true
         }
@@ -81,7 +82,7 @@ export default {
       })
     },
     movieSlice() {
-      return this.genreMovie.slice(this.movieNum, this.movieNum + 15)
+      return this.genreMovie.slice(this.movieNum, this.movieNum + 12)
     },
     genres() {
       return this.GET_GENRES
